@@ -50,7 +50,7 @@ namespace Rcon.Function
             try
             {
                 // instantiate client and execute command
-                var rconClient = await new RconService(connectionPayload).GetClient();
+                var rconClient = await new RconService(connectionPayload, context).GetClient();
                 var result = "Oops! Allowed values for `gametype` are: " + string.Join(", ", Enum.GetNames(typeof(GameTypes))) + ".";
 
                 GameTypes gameType;

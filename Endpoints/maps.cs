@@ -45,7 +45,7 @@ namespace Rcon.Function
             try
             {
                 // instantiate client and execute command
-                var rconClient = await new RconService(connectionPayload).GetClient();
+                var rconClient = await new RconService(connectionPayload, context).GetClient();
                 var result = await rconClient.ExecuteCommandAsync("maps *", true);
                 return new OkObjectResult(result);
             }

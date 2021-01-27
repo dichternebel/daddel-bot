@@ -5,25 +5,58 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Rcon.Function
 {
     public static class connect
     {
+        private static bool isAccessTokenValid(string token)
+        {
+            // poor validation for token
+            Match match = Regex.Match(token, @"^[\d]+\-[\d]+");
+            return match.Success;
+        }
+
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// get, upsert or remove discord channel config for/from usage with rcon
         /// </summary>
         /// <group>configmanagement</group>
-        /// <verb>POST,DELETE/verb>
+        /// <verb>GET,POST,DELETE/verb>
         /// <url>https://rcon.azurewebsites.net/api/connect</url>
         /// <remarks>adds or removes connection</remarks>
         /// <response code="200">successful operation and response payload</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("connect")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", "delete", Route = null)] HttpRequest req, ILogger log)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", "delete", Route = null)] HttpRequest req, ILogger log)
         {
-            // ToDo: Upsert or remove onnection to DB
+            var context = new CosmosDbContext();
+
+            // GET
+            if (req.Method.ToUpper() == "GET")
+            {
+                if (req.ContentType.ToLower() != "application/json")
+                {
+                    return new BadRequestResult();
+                }
+
+                var simplePayload = await new RequestParser(req).GetRconPayload();
+
+                // check payload
+                if (simplePayload.IsValid == null)
+                {
+                    return new UnauthorizedResult();
+                }
+                if (!simplePayload.IsValid.Value)
+                {
+                    return new BadRequestResult();
+                }
+                // authorize
+                var resultObject = await context.GetConnection(simplePayload.AccessToken);
+                return new OkObjectResult(resultObject);
+            }
+
             var connPayload = await new RequestParser(req).GetConnectionPayload();
             // check payload
             if (connPayload.IsValid == null)
@@ -34,26 +67,28 @@ namespace Rcon.Function
             {
                 return new BadRequestResult();
             }
-
+            
             // authorize
-            var context = new CosmosDbContext();
             var connectionPayload = await context.GetConnection(connPayload.AccessToken);
-            if (connectionPayload == null && req.Method.ToUpper() != "POST") 
+
+            // POST
+            if (req.Method.ToUpper() == "POST")
             {
-                return new UnauthorizedResult();
+                if (!isAccessTokenValid(connPayload.AccessToken)) return new BadRequestResult();
+                // upsert connection
+                await context.SetConnection(connPayload);
             }
+
+            // DELETE
             else if (req.Method.ToUpper() == "DELETE")
             {
+                if (connectionPayload == null) 
+                {
+                    return new UnauthorizedResult();
+                }
                 await context.DeleteConnection(connectionPayload);
-                return new OkObjectResult("00,OK,00,00");
             }
-
-            // poor validation for token
-            Match match = Regex.Match(connPayload.AccessToken, @"^[\d]+\-[\d]+");
-            if (!match.Success) return new UnauthorizedResult();
-
-            // upsert connection
-            await context.SetConnection(connPayload);
+            
             return new OkObjectResult("00,OK,00,00");
         }
     }

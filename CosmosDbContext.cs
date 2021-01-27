@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using System.Security.Authentication;
+using System;
 
 namespace Rcon.Function
 {
@@ -37,15 +38,40 @@ namespace Rcon.Function
 
             if (foundConnection == null)
             {
+                connection.InsertedOn = DateTime.UtcNow;
                 await coll.InsertOneAsync(connection);
                 return;
             }
 
-            // MongoDB Id is immutable, so I decorated the Id property with
-            // [BsonIgnoreIfNull]
-            connection.Id = null;
-            // now replace that thing
-            await coll.ReplaceOneAsync(x => x.AccessToken == foundConnection.AccessToken, connection, new ReplaceOptions() { IsUpsert = true } );
+            var currentPwd = connection.Password == null ? foundConnection.Password : connection.Password;
+            var filter = Builders<ConnectionPayload>.Filter.Eq("Id", foundConnection.Id);
+            var update = Builders<ConnectionPayload>.Update
+                .Set("IsEnabled", connection.IsEnabled)
+                .Set("Password", currentPwd)
+                .Set("Port", connection.Port)
+                .Set("Role", connection.Role)
+                .Set("Server", connection.Server)
+                .Set("UpdatedOn", DateTime.UtcNow);
+
+            await coll.UpdateOneAsync(filter, update);
+        }
+
+        public async Task TouchConnection(ConnectionPayload connection)
+        {
+            var client = new MongoClient(this.settings);
+            var db = client.GetDatabase(database);
+            var coll = db.GetCollection<ConnectionPayload>(collectionName);
+
+            var foundConnection = await coll.Find(x => x.AccessToken == connection.AccessToken).SingleOrDefaultAsync();
+
+            if (foundConnection == null)
+            {
+                return;
+            }
+
+            var filter = Builders<ConnectionPayload>.Filter.Eq("Id", connection.Id);
+            var update = Builders<ConnectionPayload>.Update.Set("TouchedOn", DateTime.UtcNow);
+            await coll.UpdateOneAsync(filter, update);
         }
 
         // ToDo: unused & untested

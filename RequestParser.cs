@@ -21,8 +21,8 @@ namespace Rcon.Function
             string server = req.Query["server"];
             string port = req.Query["port"];
             string password = req.Query["password"];
-            string token = req.Query["token"];
-            string isEnabled = req.Query["enabled"];
+            string accessToken = req.Query["accessToken"];
+            string isEnabled = req.Query["isEnabled"];
             string role = req.Query["role"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -31,19 +31,19 @@ namespace Rcon.Function
             server = server ?? data?.server;
             port = port ?? data?.port;
             password = password ?? data?.password;
-            token = token ?? data?.token;
-            isEnabled = isEnabled ?? data?.enabled;
+            accessToken = accessToken ?? data?.accessToken;
+            isEnabled = isEnabled ?? data?.isEnabled;
             role = role ?? data?.role;
 
             int tempVal;
             int? portNumber = Int32.TryParse(port, out tempVal) ? Int32.Parse(port) : (int?)null;
 
             var result = new ConnectionPayload {
-                AccessToken = token,
+                AccessToken = accessToken,
                 Server = server,
                 Port = portNumber,
                 Password = password,
-                IsEnabled = isEnabled == "true" ? true : false ,
+                IsEnabled = Convert.ToBoolean(isEnabled),
                 Role = role
             };
 
@@ -54,13 +54,13 @@ namespace Rcon.Function
         public async Task<RconPayload> GetRconPayload()
         {
             string parameter = req.Query["param"];
-            string token = req.Query["token"];
+            string accessToken = req.Query["accessToken"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
             parameter = parameter ?? data?.param;
-            token = token ?? data?.token;
+            accessToken = accessToken ?? data?.accessToken;
 
             if (!string.IsNullOrWhiteSpace(parameter))
             {
@@ -75,7 +75,7 @@ namespace Rcon.Function
             var parameterArray = parameter.Split(' ');
 
             var result = new RconPayload {
-                AccessToken = token,
+                AccessToken = accessToken,
                 Parameter = parameterArray
             };
 
@@ -94,12 +94,14 @@ namespace Rcon.Function
 
                 // Unauthorized
                 if (String.IsNullOrWhiteSpace(connectionPayload.AccessToken)) return null;
-                if (String.IsNullOrWhiteSpace(connectionPayload.Server)) return null;
-                if (String.IsNullOrWhiteSpace(connectionPayload.Password)) return null;
 
                 // Bad Request
-                if (!connectionPayload.Port.HasValue) return false;
-                if (connectionPayload.Port.Value < 80 || connectionPayload.Port.Value > 65535) return false;
+                if (connectionPayload.IsEnabled)
+                {
+                    if (!connectionPayload.Port.HasValue) return false;
+                    if (connectionPayload.Port.Value < 80 || connectionPayload.Port.Value > 65535) return false;
+                    if (String.IsNullOrWhiteSpace(connectionPayload.Server)) return false;
+                 }
             }
             else
             {

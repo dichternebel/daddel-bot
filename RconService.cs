@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using RconSharp;
 
@@ -6,15 +7,20 @@ namespace Rcon.Function
     public class RconService
     {
         public ConnectionPayload connection { get; private set; }
+        public CosmosDbContext context { get; private set; }
 
-        public RconService(ConnectionPayload connection)
+        public RconService(ConnectionPayload connection, CosmosDbContext context)
         {
             this.connection = connection;
+            this.context = context;
         }
 
         public async Task<RconClient> GetClient()
         {
             if (this.connection == null) return null;
+            // touched
+            this.context.TouchConnection(this.connection); // intentionally not awaited!
+
             // Create an instance of RconClient pointing to an IP and a PORT
             var client = RconClient.Create(this.connection.Server , this.connection.Port.Value);
 

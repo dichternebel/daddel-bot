@@ -1,19 +1,27 @@
 using System;
+using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Rcon.Function
 {
     public class ConnectionPayload
     {
-        [BsonIgnoreIfNull]
+        [JsonIgnore, BsonIgnoreIfNull]
         public object Id { get; set; }
         public string AccessToken { get; set; }
         public string Server { get; set; }
         public int? Port { get; set; }
+        [JsonIgnore]
         public string Password { get; set; }
         public bool IsEnabled {get; set;}
         public string Role {get; set;}
-        [BsonIgnore]
+        [JsonIgnore, BsonIgnore]
         public bool? IsValid { get; set; }
+        [JsonIgnore]
+        public DateTime? InsertedOn {get; set; }
+        [JsonIgnore, BsonIgnoreIfNull]
+        public DateTime? UpdatedOn {get; set;}
+        [JsonIgnore, BsonIgnoreIfNull]
+        public DateTime? TouchedOn {get; set; }
     }
 }

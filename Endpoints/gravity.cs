@@ -50,7 +50,7 @@ namespace Rcon.Function
             try
             {
                 // instantiate client and execute command
-                var rconClient = await new RconService(connectionPayload).GetClient();
+                var rconClient = await new RconService(connectionPayload, context).GetClient();
                 var result = "Oops! Allowed values for `gravity` are: " + string.Join(", ", Enum.GetNames(typeof(GravityTypes))) + ".";
                 GravityTypes gravityType;
                 if (Enum.TryParse(rconPayload.Parameter[0].ToLower(), true, out gravityType))
