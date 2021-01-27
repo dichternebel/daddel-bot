@@ -19,7 +19,7 @@ namespace Rcon.Function
         {
             if (this.connection == null) return null;
             // touched
-            this.context.TouchConnection(this.connection); // intentionally not awaited!
+            await this.context.TouchConnection(this.connection);
 
             // Create an instance of RconClient pointing to an IP and a PORT
             var client = RconClient.Create(this.connection.Server , this.connection.Port.Value);
