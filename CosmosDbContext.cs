@@ -12,6 +12,7 @@ namespace Rcon.Function
         private string connectionString = System.Environment.GetEnvironmentVariable("mongodb-connection-string");
         private string database = System.Environment.GetEnvironmentVariable("database");
         private string collectionName = System.Environment.GetEnvironmentVariable("collectionName");
+        private string secKey = System.Environment.GetEnvironmentVariable("keyMaster");
         
         public CosmosDbContext()
         {
@@ -25,7 +26,12 @@ namespace Rcon.Function
             var client = new MongoClient(this.settings);
             var db = client.GetDatabase(database);
             var coll = db.GetCollection<ConnectionPayload>(collectionName);
-            return await coll.Find(x => x.AccessToken == accessToken).SingleOrDefaultAsync();
+            var currentConnection = await coll.Find(x => x.AccessToken == accessToken).SingleOrDefaultAsync();
+            if (currentConnection?.Password != null)
+            {
+                currentConnection.Password = VinzClortho.Decrypt(currentConnection.Password, secKey);
+            }
+            return currentConnection;
         }
 
         public async Task SetConnection(ConnectionPayload connection)
@@ -38,12 +44,17 @@ namespace Rcon.Function
 
             if (foundConnection == null)
             {
+                if (connection.Password != null)
+                {
+                    connection.Password = VinzClortho.Encrypt(connection.Password, secKey);
+                }
+
                 connection.InsertedOn = DateTime.UtcNow;
                 await coll.InsertOneAsync(connection);
                 return;
             }
 
-            var currentPwd = connection.Password == null ? foundConnection.Password : connection.Password;
+            var currentPwd = connection.Password == null ? foundConnection.Password : VinzClortho.Encrypt(connection.Password, secKey);
             var filter = Builders<ConnectionPayload>.Filter.Eq("Id", foundConnection.Id);
             var update = Builders<ConnectionPayload>.Update
                 .Set("IsEnabled", connection.IsEnabled)
