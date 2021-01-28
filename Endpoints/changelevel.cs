@@ -35,7 +35,7 @@ namespace Rcon.Function
             }
             if (String.IsNullOrWhiteSpace(rconPayload.Parameter[0]))
             {
-                return new OkObjectResult("Oops! You must provide a parameter to be executed e.g. `changelevel de_dust2`.");
+                return new OkObjectResult("Oops! You must provide a parameter to be executed e.g. `map de_dust2`.");
             }
 
             // authorize

@@ -6,6 +6,7 @@ namespace Rcon.Function
 
     public enum GameTypes
     {
+        casual,
         competitive,
         wingman,
         dangerzone,
