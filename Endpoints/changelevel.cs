@@ -1,10 +1,11 @@
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace Rcon.Function
 {
@@ -51,6 +52,14 @@ namespace Rcon.Function
             {
                 // instantiate client and execute command
                 var rconClient = await new RconService(connectionPayload, context).GetClient();
+                var mapList = await RconHelper.GetMaps(rconClient);
+                var map = mapList.FirstOrDefault(x => x.Contains(rconPayload.Parameter[0].ToLower()));
+                
+                if (string.IsNullOrEmpty(map))
+                {
+                    return new OkObjectResult($"Oops! Couldn't find map {rconPayload.Parameter[0]} on server. :flushed:");
+                }
+
                 var result = await rconClient.ExecuteCommandAsync("changelevel " + rconPayload.Parameter[0]);
                 return new OkObjectResult(result);
             }

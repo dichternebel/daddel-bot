@@ -1,12 +1,12 @@
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Rcon.Function
 {
@@ -62,43 +62,57 @@ namespace Rcon.Function
                 }
 
                 // Get map pool from server
-                var response = await rconClient.ExecuteCommandAsync("maps *");
-                // Get random map that suits the given typen
-                var randomMap = getRandomMapByGameType(response, gameType);
+                var mapList = await RconHelper.GetMaps(rconClient);
 
+                // Set random map that suits the given type or use parameter value(s)
+                var currentMap = rconPayload.Parameter.Length > 1 ?
+                    mapList.FirstOrDefault(x => x.Contains(rconPayload.Parameter[1].ToLower())) :
+                    getRandomMapByGameType(mapList, gameType);
+
+                if (string.IsNullOrEmpty(currentMap))
+                {
+                    return new OkObjectResult($"Oops! Couldn't find map on server... :flushed:");
+                }
+
+                // Set mapgroup by parameter or match currentmap
+                var currentMapGroup = rconPayload.Parameter.Length > 2 ?
+                    rconPayload.Parameter[2].ToLower() :
+                    "mg_" + (currentMap.Contains("workshop") ? currentMap.Split('/')[2] : currentMap);
+
+                // switch game to chosen type and map
                 if (gameType == GameTypes.casual)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 0; exec gamemode_casual; map {randomMap}; mapgroup mg_{randomMap};");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 0; exec gamemode_casual; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Competitive'.\n{resp}");
                 }
                 if (gameType == GameTypes.competitive)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 1; exec gamemode_competitive; map {randomMap}; mapgroup mg_{randomMap};");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 1; exec gamemode_competitive; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Competitive'.\n{resp}");
                 }
                 if (gameType == GameTypes.wingman)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 2; exec gamemode_competitive2v2; map {randomMap}; mapgroup mg_{randomMap};");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 0; game_mode 2; exec gamemode_competitive2v2; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Wingman'.\n{resp}");
                 }
                 if (gameType == GameTypes.dangerzone)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 6; game_mode 0; exec gamemode_survival; map {randomMap}; mapgroup mg_{randomMap};");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 6; game_mode 0; exec gamemode_survival; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Dangerzone'.\n{resp}");
                 }
                 if (gameType == GameTypes.armsrace)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 0; exec gamemode_armsrace; map {randomMap}; mapgroup mg_{randomMap};");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 0; exec gamemode_armsrace; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Armsrace'.\n{resp}");
                 }
                 if (gameType == GameTypes.deathmatch)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_deathmatch; map {randomMap};mapgroup mg_{randomMap}; sv_infinite_ammo 2; mp_teammates_are_enemies 1;");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_deathmatch; map {currentMap};mapgroup {currentMapGroup}; sv_infinite_ammo 2; mp_teammates_are_enemies 1;");
                     return new OkObjectResult($"Switched server to mode 'Deathmatch'.\n{resp}");
                 }
                 if (gameType == GameTypes.teamdeathmatch)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_deathmatch; map {randomMap}; mapgroup mg_{randomMap}; sv_infinite_ammo 2;");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_deathmatch; map {currentMap}; mapgroup {currentMapGroup}; sv_infinite_ammo 2;");
                     return new OkObjectResult($"Switched server to mode 'Team Deathmatch'.\n{resp}");
                 }
                 
@@ -111,36 +125,24 @@ namespace Rcon.Function
             }
         }
 
-        private static string getRandomMapByGameType(string mapResponse, GameTypes gameType)
+        private static string getRandomMapByGameType(List<string> mapList, GameTypes gameType)
         {
-            // create an array from response
-            var responseArray = mapResponse.Split("\n"); // split by lines
-            responseArray = responseArray.Skip(1).ToArray(); //shift
-            responseArray = responseArray.Reverse().Skip(1).Reverse().ToArray(); // pop
-
-            // get those map names only
-            var mapList = new List<string>();
-            foreach (var item in responseArray)
-            {
-                var elements = item.Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                if (elements.Length > 2) mapList.Add(elements[2].Remove(elements[2].Length - 4)); // 'Path' not working here because of workshop maps
-            }
             var filteredList = new List<string>();
 
             switch (gameType)
             {
                 case GameTypes.armsrace:
-                case GameTypes.wingman:
+                case GameTypes.deathmatch:
+                case GameTypes.teamdeathmatch:
                     filteredList = mapList.Where(x => x.Contains("ar_")).ToList();
                 break;
                 
                 case GameTypes.casual:
+                case GameTypes.wingman:
                     filteredList = mapList.Where(x => x.Contains("de_")).ToList();
                 break;
 
                 case GameTypes.competitive:
-                case GameTypes.deathmatch:
-                case GameTypes.teamdeathmatch:
                     filteredList = mapList.Where(x => x.Contains("de_") || x.Contains("cs_")).ToList();
                 break;
 
