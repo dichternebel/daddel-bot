@@ -25,6 +25,7 @@ namespace Rcon.Function
                 if (elements.Length > 2) mapList.Add(elements[2].Remove(elements[2].Length - 4)); // 'Path' not working here because of workshop maps
             }
 
+            mapList.Sort();
             return mapList;
         }
     }
