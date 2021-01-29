@@ -36,57 +36,41 @@ namespace Rcon.Function
             // GET
             if (req.Method.ToUpper() == "GET")
             {
-                if (req.ContentType.ToLower() != "application/json")
-                {
-                    return new BadRequestResult();
-                }
-
                 var simplePayload = await new RequestParser(req).GetRconPayload();
-
+                if (req.ContentType.ToLower() != "application/json") return new BadRequestResult();
                 // check payload
-                if (simplePayload.IsValid == null)
-                {
-                    return new UnauthorizedResult();
-                }
-                if (!simplePayload.IsValid.Value)
-                {
-                    return new BadRequestResult();
-                }
+                if (simplePayload.IsValid == null) return new UnauthorizedResult();
+                if (!simplePayload.IsValid.Value) return new BadRequestResult();
                 // authorize
                 var resultObject = await context.GetConnection(simplePayload.AccessToken);
                 return new OkObjectResult(resultObject);
             }
 
-            var connPayload = await new RequestParser(req).GetConnectionPayload();
-            // check payload
-            if (connPayload.IsValid == null)
-            {
-                return new UnauthorizedResult();
-            }
-            if (!connPayload.IsValid.Value)
-            {
-                return new BadRequestResult();
-            }
-            
-            // authorize
-            var connectionPayload = await context.GetConnection(connPayload.AccessToken);
-
-            // POST
+           // POST
             if (req.Method.ToUpper() == "POST")
             {
-                if (!isAccessTokenValid(connPayload.AccessToken)) return new BadRequestResult();
+                var connectionPayload = await new RequestParser(req).GetConnectionPayload();
+                // check payload
+                if (connectionPayload.IsValid == null) return new UnauthorizedResult();
+                if (!connectionPayload.IsValid.Value) return new BadRequestResult();
+                if (!isAccessTokenValid(connectionPayload.AccessToken)) return new BadRequestResult();
                 // upsert connection
-                await context.SetConnection(connPayload);
+                await context.SetConnection(connectionPayload);
             }
 
             // DELETE
             else if (req.Method.ToUpper() == "DELETE")
             {
-                if (connectionPayload == null) 
+                var simplePayload = await new RequestParser(req).GetRconPayload();
+                // authorize
+                var connectionPayload = await context.GetConnection(simplePayload.AccessToken);
+                if (connectionPayload == null) return new UnauthorizedResult();
+                if (simplePayload.Parameter.Length > 0
+                    && simplePayload.Parameter[0] == "all")
                 {
-                    return new UnauthorizedResult();
+                    await context.DeleteConnections(simplePayload.AccessToken);
                 }
-                await context.DeleteConnection(connectionPayload);
+                else await context.DeleteConnection(connectionPayload);
             }
             
             return new OkObjectResult("00,OK,00,00");

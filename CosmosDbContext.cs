@@ -102,7 +102,7 @@ namespace Rcon.Function
             var coll = db.GetCollection<ConnectionPayload>(collectionName);
 
             var identifier = accessToken.Split("-"); 
-            await coll.DeleteManyAsync(x => x.AccessToken.StartsWith(identifier[0]));
+            await coll.DeleteManyAsync(x => x.AccessToken.StartsWith(identifier[0]+'-'));
         }
     }
 }
