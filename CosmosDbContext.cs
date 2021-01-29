@@ -16,7 +16,6 @@ namespace Rcon.Function
         
         public CosmosDbContext()
         {
-            var connectionString = System.Environment.GetEnvironmentVariable("mongodb-connection-string");
             this.settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
             this.settings.SslSettings =  new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
         }
@@ -85,7 +84,6 @@ namespace Rcon.Function
             await coll.UpdateOneAsync(filter, update);
         }
 
-        // ToDo: unused & untested
         public async Task DeleteConnection(ConnectionPayload currentConnection)
         {
             var client = new MongoClient(this.settings);
@@ -94,7 +92,6 @@ namespace Rcon.Function
             await coll.DeleteOneAsync(x => x.Id == currentConnection.Id);
         }
 
-        // ToDo: unused & untested
         public async Task DeleteConnections(string accessToken)
         {
             var client = new MongoClient(this.settings);
