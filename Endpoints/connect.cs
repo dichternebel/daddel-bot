@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 
 namespace Rcon.Function
 {
-    public static class connect
+    internal static class connect
     {
         private static bool isAccessTokenValid(string token)
         {
@@ -19,60 +18,73 @@ namespace Rcon.Function
         }
 
         /// <summary>
-        /// get, upsert or remove discord channel config for/from usage with rcon
+        /// get discord channel config for usage with rcon
         /// </summary>
-        /// <group>configmanagement</group>
-        /// <verb>GET,POST,DELETE/verb>
-        /// <url>https://rcon.azurewebsites.net/api/connect</url>
-        /// <remarks>adds or removes connection</remarks>
-        /// <response code="200">successful operation and response payload</response>
-        /// <response code="400">Invalid request</response>
+        /// <response code="200">Authenticated</response>
+        /// <response code="400">Bad request</response>
         /// <response code="401">Unauthorized</response>
-        [FunctionName("connect")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", "delete", Route = null)] HttpRequest req, ILogger log)
+        /// <response code="500">Oops!</response>
+        /// <param name="req">Request</param>    
+        [ProducesResponseType(typeof(ConnectionPayload), 200)]
+        [FunctionName("connect-get")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "connect")] HttpRequest req, ILogger log)
         {
             var context = new CosmosDbContext();
+            var simplePayload = await new RequestParser(req).GetRconPayload();
+            if (req.ContentType.ToLower() != "application/json") return new BadRequestResult();
+            // check payload
+            if (simplePayload.IsValid == null) return new UnauthorizedResult();
+            if (!simplePayload.IsValid.Value) return new BadRequestResult();
+            // authorize
+            var resultObject = await context.GetConnection(simplePayload.AccessToken);
+            return new OkObjectResult(resultObject);
+        }
 
-            // GET
-            if (req.Method.ToUpper() == "GET")
-            {
-                var simplePayload = await new RequestParser(req).GetRconPayload();
-                if (req.ContentType.ToLower() != "application/json") return new BadRequestResult();
-                // check payload
-                if (simplePayload.IsValid == null) return new UnauthorizedResult();
-                if (!simplePayload.IsValid.Value) return new BadRequestResult();
-                // authorize
-                var resultObject = await context.GetConnection(simplePayload.AccessToken);
-                return new OkObjectResult(resultObject);
-            }
+        /// <summary>
+        /// upsert discord channel config for usage with rcon
+        /// </summary>
+        /// <response code="200">Authenticated</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
+        [FunctionName("connect-post")]
+        public static async Task<IActionResult> Run2([HttpTrigger(AuthorizationLevel.Function, "post", Route = "connect")] HttpRequest req, ILogger log)
+        {
+            var context = new CosmosDbContext();
+            var connectionPayload = await new RequestParser(req).GetConnectionPayload();
+            // check payload
+            if (connectionPayload.IsValid == null) return new UnauthorizedResult();
+            if (!connectionPayload.IsValid.Value) return new BadRequestResult();
+            if (!isAccessTokenValid(connectionPayload.AccessToken)) return new BadRequestResult();
+            // upsert connection
+            await context.SetConnection(connectionPayload);
+            return new OkObjectResult("00,OK,00,00");
+        }
 
-           // POST
-            if (req.Method.ToUpper() == "POST")
+        /// <summary>
+        /// remove discord channel config from usage with rcon
+        /// </summary>
+        /// <response code="200">Authenticated</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
+        /// <param name="req"></param> // -- ToDo: NOT WORKING
+        [HttpDelete("{req}")] // -- ToDo: NOT WORKING
+        [ProducesResponseType(typeof(ConnectionPayload), 200)]
+        [FunctionName("connect-delete")]
+        public static async Task<IActionResult> Run3([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "connect")] HttpRequest req, ILogger log)
+        {
+            var context = new CosmosDbContext();
+            var simplePayload = await new RequestParser(req).GetRconPayload();
+            // authorize
+            var connectionPayload = await context.GetConnection(simplePayload.AccessToken);
+            if (connectionPayload == null) return new UnauthorizedResult();
+            if (simplePayload.Parameter.Length > 0
+                && simplePayload.Parameter[0] == "all")
             {
-                var connectionPayload = await new RequestParser(req).GetConnectionPayload();
-                // check payload
-                if (connectionPayload.IsValid == null) return new UnauthorizedResult();
-                if (!connectionPayload.IsValid.Value) return new BadRequestResult();
-                if (!isAccessTokenValid(connectionPayload.AccessToken)) return new BadRequestResult();
-                // upsert connection
-                await context.SetConnection(connectionPayload);
+                await context.DeleteConnections(simplePayload.AccessToken);
             }
-
-            // DELETE
-            else if (req.Method.ToUpper() == "DELETE")
-            {
-                var simplePayload = await new RequestParser(req).GetRconPayload();
-                // authorize
-                var connectionPayload = await context.GetConnection(simplePayload.AccessToken);
-                if (connectionPayload == null) return new UnauthorizedResult();
-                if (simplePayload.Parameter.Length > 0
-                    && simplePayload.Parameter[0] == "all")
-                {
-                    await context.DeleteConnections(simplePayload.AccessToken);
-                }
-                else await context.DeleteConnection(connectionPayload);
-            }
-            
+            else await context.DeleteConnection(connectionPayload);
             return new OkObjectResult("00,OK,00,00");
         }
     }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Rcon.Function
 {
-    public static class VinzClortho
+    internal static class VinzClortho
     {
-        public static string Encrypt(string plainText, string secKey)
+        internal static string Encrypt(string plainText, string secKey)
         {
             var toEncryptedArray = UTF8Encoding.UTF8.GetBytes(plainText);
 
@@ -30,7 +30,7 @@ namespace Rcon.Function
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public static string Decrypt(string cipherText, string secKey)
+        internal static string Decrypt(string cipherText, string secKey)
         {
             var toEncryptArray = Convert.FromBase64String(cipherText);
 

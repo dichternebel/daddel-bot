@@ -5,7 +5,7 @@ using System;
 
 namespace Rcon.Function
 {
-    public class CosmosDbContext
+    internal class CosmosDbContext
     {
         private MongoClientSettings settings {get; set;}
 

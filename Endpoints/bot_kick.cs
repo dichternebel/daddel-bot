@@ -7,18 +7,14 @@ using System.Threading.Tasks;
 
 namespace Rcon.Function
 {
-    public static class bot_kick
+    internal static class bot_kick
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// kicks all bots from current match
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/bot_kick</url>
-        /// <remarks>kicks all bots from current match</remarks>
-        /// <response code="200">successful operation and response payload</response>
-        /// <response code="400">Invalid request</response>
+        /// <response code="200">Bots kicked</response>
         /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [FunctionName("bot_kick")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {

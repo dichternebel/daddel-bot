@@ -11,13 +11,9 @@ namespace Rcon.Function
     public static class rcon
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// executes any sequence of rcon commands separated by semicolon
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/rcon</url>
-        /// <remarks>executes any sequence of rcon commands separated by semicolon</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Sccessful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("rcon")]

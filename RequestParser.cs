@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Rcon.Function
 {
-    public class RequestParser
+    internal class RequestParser
     {
         private HttpRequest req { get; set; }
 

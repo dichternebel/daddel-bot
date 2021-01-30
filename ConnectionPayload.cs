@@ -4,10 +4,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Rcon.Function
 {
+    /// <summary>
+    /// Payload defintion
+    /// </summary>
     public class ConnectionPayload
     {
         [JsonIgnore, BsonIgnoreIfNull]
-        public object Id { get; set; }
+        internal object Id { get; set; }
         public string AccessToken { get; set; }
         public string Server { get; set; }
         public int? Port { get; set; }
@@ -16,12 +19,12 @@ namespace Rcon.Function
         public bool IsEnabled {get; set;}
         public string Role {get; set;}
         [JsonIgnore, BsonIgnore]
-        public bool? IsValid { get; set; }
+        internal bool? IsValid { get; set; }
         [JsonIgnore]
-        public DateTime? InsertedOn {get; set; }
+        internal DateTime? InsertedOn {get; set; }
         [JsonIgnore, BsonIgnoreIfNull]
-        public DateTime? UpdatedOn {get; set;}
+        internal DateTime? UpdatedOn {get; set;}
         [JsonIgnore, BsonIgnoreIfNull]
-        public DateTime? TouchedOn {get; set; }
+        internal DateTime? TouchedOn {get; set; }
     }
 }

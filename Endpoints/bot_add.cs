@@ -7,18 +7,14 @@ using System.Threading.Tasks;
 
 namespace Rcon.Function
 {
-    public static class bot_add
+    internal static class bot_add
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// sets bot mode back to normal and adds bots
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/bot_add</url>
-        /// <remarks>sets bot mode back to normal and adds bots</remarks>
-        /// <response code="200">successful operation and response payload</response>
-        /// <response code="400">Invalid request</response>
+        /// <response code="200">Bot added</response>
         /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [FunctionName("bot_add")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {

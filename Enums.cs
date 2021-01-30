@@ -1,5 +1,3 @@
-using System;
-
 namespace Rcon.Function
 {
     // https://totalcsgo.com/commands

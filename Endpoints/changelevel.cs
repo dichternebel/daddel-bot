@@ -6,21 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace Rcon.Function
 {
-    public static class changelevel
+    internal static class changelevel
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// changes map of current match
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/changelevel</url>
-        /// <remarks>changes map of current match</remarks>
-        /// <response code="200">successful operation and response payload</response>
-        /// <response code="400">Invalid request</response>
+        /// <response code="200">Map changed, not found or server offline</response>
+        /// <response code="400">Map name missing</response>
         /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
+        // [QueryStringParameter("bla","bla")] <-- ArgumentNullException
         [FunctionName("changelevel")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {

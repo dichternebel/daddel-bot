@@ -7,7 +7,7 @@ using RconSharp;
 
 namespace Rcon.Function
 {
-    public static class RconHelper
+    internal static class RconHelper
     {
         public static async Task<List<string>> GetMaps(RconClient rconClient)
         {

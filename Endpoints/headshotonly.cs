@@ -11,13 +11,9 @@ namespace Rcon.Function
     public static class headshotonly
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// changes mode of current match to (not) headshot only
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/headshotonly</url>
-        /// <remarks>changes mode of current match to (not) headshot only</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("headshotonly")]

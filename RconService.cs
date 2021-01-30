@@ -4,7 +4,7 @@ using RconSharp;
 
 namespace Rcon.Function
 {
-    public class RconService
+    internal class RconService
     {
         public ConnectionPayload connection { get; private set; }
         public CosmosDbContext context { get; private set; }

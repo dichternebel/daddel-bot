@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>rcon-function</name>
+    </assembly>
+    <members>
+        <member name="T:Rcon.Function.ConnectionPayload">
+            <summary>
+            Payload defintion
+            </summary>
+        </member>
+        <member name="M:Rcon.Function.bot_add.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            sets bot mode back to normal and adds bots
+            </summary>
+            <response code="200">Bot added</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:Rcon.Function.bot_kick.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            kicks all bots from current match
+            </summary>
+            <response code="200">Bots kicked</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:Rcon.Function.changelevel.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            changes map of current match
+            </summary>
+            <response code="200">Map changed, not found or server offline</response>
+            <response code="400">Map name missing</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:Rcon.Function.connect.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            get discord channel config for usage with rcon
+            </summary>
+            <response code="200">Authenticated</response>
+            <response code="400">Bad request</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+            <param name="req">Request</param>    
+        </member>
+        <member name="M:Rcon.Function.connect.Run2(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            upsert discord channel config for usage with rcon
+            </summary>
+            <response code="200">Authenticated</response>
+            <response code="400">Bad request</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:Rcon.Function.connect.Run3(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            remove discord channel config from usage with rcon
+            </summary>
+            <response code="200">Authenticated</response>
+            <response code="400">Bad request</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+            <param name="req"></param> // -- ToDo: NOT WORKING
+        </member>
+        <member name="M:Rcon.Function.gametype.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            changes game type and game mode of the server
+            </summary>
+            <response code="200">Successful operation and response payload</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.gravity.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            changes gravity of current match to given value
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.headshotonly.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            changes mode of current match to (not) headshot only
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.maps.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            returns CS:GO server maps
+            </summary>
+            <response code="200">Successful operation and response payload</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.pistolonly.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            changes mode of current match to (not) pistol only
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.quit.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            restarts or terminates CS:GO server
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.rcon.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            executes any sequence of rcon commands separated by semicolon
+            </summary>
+            <response code="200">Sccessful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.restartgame.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            restarts current match
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.status.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            returns CS:GO server status
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.warmup_end.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            ends warm up in 10 sec.
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+        <member name="M:Rcon.Function.warmup_start.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            restarts warmup in 3 sec.
+            </summary>
+            <response code="200">Successful operation</response>
+            <response code="400">Invalid request</response>
+            <response code="401">Unauthorized</response>
+        </member>
+    </members>
+</doc>

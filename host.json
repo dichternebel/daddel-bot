@@ -7,5 +7,10 @@
                 "isEnabled": true
             }
         }
+    },
+    "extensions": {
+        "Swashbuckle": {
+        "XmlPath":  "RconFunctionsOpenAPI.xml" 
+        } 
     }
 }

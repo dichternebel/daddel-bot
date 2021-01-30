@@ -10,13 +10,9 @@ namespace Rcon.Function
     public static class restartgame
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// restarts current match
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/restartgame</url>
-        /// <remarks>restarts current match</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("restartgame")]

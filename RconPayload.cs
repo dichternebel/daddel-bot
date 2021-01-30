@@ -1,6 +1,6 @@
 namespace Rcon.Function
 {
-    public class RconPayload
+    internal class RconPayload
     {
         public object Id { get; set; }
         public string AccessToken { get; set; }

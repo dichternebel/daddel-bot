@@ -10,13 +10,9 @@ namespace Rcon.Function
     public static class quit
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// restarts or terminates CS:GO server
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/quit</url>
-        /// <remarks>restarts or terminates CS:GO server</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("quit")]

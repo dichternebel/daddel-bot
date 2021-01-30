@@ -11,15 +11,12 @@ namespace Rcon.Function
     public static class gravity
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// changes gravity of current match to given value
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/gravity</url>
-        /// <remarks>changes gravity of current match to given value</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
+        //[ProducesResponseType(typeof((GravityTypes), 400)] <- ToDo: How to give back GetNames?
         [FunctionName("gravity")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {

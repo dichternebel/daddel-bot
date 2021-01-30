@@ -10,13 +10,9 @@ namespace Rcon.Function
     public static class warmup_start
     {
         /// <summary>
-        /// upsert or remove discord channel for/from usage with rcon
+        /// restarts warmup in 3 sec.
         /// </summary>
-        /// <group>rcon</group>
-        /// <verb>GET</verb>
-        /// <url>https://rcon.azurewebsites.net/api/warmup_start</url>
-        /// <remarks>restarts warmup in 3 sec.</remarks>
-        /// <response code="200">successful operation and response payload</response>
+        /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
         [FunctionName("warmup_start")]
