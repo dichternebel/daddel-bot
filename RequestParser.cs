@@ -25,13 +25,15 @@ namespace Rcon.Function
             string isEnabled = req.Query["isEnabled"];
             string role = req.Query["role"];
 
+            accessToken = accessToken ?? req.Headers["accessToken"];
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
             server = server ?? data?.server;
             port = port ?? data?.port;
             password = password ?? data?.password;
-            accessToken = accessToken ?? data?.accessToken;
+            // accessToken = accessToken ?? data?.accessToken;
             isEnabled = isEnabled ?? data?.isEnabled;
             role = role ?? data?.role;
 
@@ -55,12 +57,13 @@ namespace Rcon.Function
         {
             string parameter = req.Query["param"];
             string accessToken = req.Query["accessToken"];
+            accessToken = accessToken ?? req.Headers["accessToken"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
             parameter = parameter ?? data?.param;
-            accessToken = accessToken ?? data?.accessToken;
+            // accessToken = accessToken ?? data?.accessToken;
 
             if (!string.IsNullOrWhiteSpace(parameter))
             {

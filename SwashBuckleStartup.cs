@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using AzureFunctions.Extensions.Swashbuckle;
@@ -7,6 +8,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Rcon.Function;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -45,8 +48,43 @@ namespace Rcon.Function
                             ? methodInfo.Name
                             : new Guid().ToString();
                     });
+
+                    x.OperationFilter<AddRequiredHeaderParameter>();
                 });
             });
+        }
+    }
+
+    internal class AddRequiredHeaderParameter : IOperationFilter
+    {
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        {
+            if (operation.Parameters == null)
+                operation.Parameters = new List<OpenApiParameter>();
+
+            operation.Parameters.Add(new OpenApiParameter
+                {
+                    Name = " x-functions-key",
+                    In = ParameterLocation.Header,
+                    Required = false,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "String",
+                        Default = new OpenApiString("")
+                    }
+                });
+
+           operation.Parameters.Add(new OpenApiParameter
+                {
+                    Name = "accessToken",
+                    In = ParameterLocation.Header,
+                    Required = false,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "String",
+                        Default = new OpenApiString("")
+                    }
+                });
         }
     }
 }

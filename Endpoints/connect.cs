@@ -24,7 +24,6 @@ namespace Rcon.Function
         /// <response code="400">Bad request</response>
         /// <response code="401">Unauthorized</response>
         /// <response code="500">Oops!</response>
-        /// <param name="req">Request</param>    
         [ProducesResponseType(typeof(ConnectionPayload), 200)]
         [FunctionName("connect-get")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "connect")] HttpRequest req, ILogger log)
@@ -68,9 +67,6 @@ namespace Rcon.Function
         /// <response code="400">Bad request</response>
         /// <response code="401">Unauthorized</response>
         /// <response code="500">Oops!</response>
-        /// <param name="req"></param> // -- ToDo: NOT WORKING
-        [HttpDelete("{req}")] // -- ToDo: NOT WORKING
-        [ProducesResponseType(typeof(ConnectionPayload), 200)]
         [FunctionName("connect-delete")]
         public static async Task<IActionResult> Run3([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "connect")] HttpRequest req, ILogger log)
         {

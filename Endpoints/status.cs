@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rcon.Function
 {
@@ -15,7 +16,7 @@ namespace Rcon.Function
         /// <response code="200">Successful operation</response>
         /// <response code="400">Invalid request</response>
         /// <response code="401">Unauthorized</response>
-        [FunctionName("status")] 
+        [FunctionName("status")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {
             var rconPayload = await new RequestParser(req).GetRconPayload();

@@ -25,7 +25,7 @@
             <response code="401">Unauthorized</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:Rcon.Function.changelevel.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
+        <member name="M:Rcon.Function.changelevel.Run(Microsoft.AspNetCore.Http.HttpRequest,System.String,Microsoft.Extensions.Logging.ILogger)">
             <summary>
             changes map of current match
             </summary>
@@ -42,7 +42,6 @@
             <response code="400">Bad request</response>
             <response code="401">Unauthorized</response>
             <response code="500">Oops!</response>
-            <param name="req">Request</param>    
         </member>
         <member name="M:Rcon.Function.connect.Run2(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
             <summary>
@@ -61,7 +60,6 @@
             <response code="400">Bad request</response>
             <response code="401">Unauthorized</response>
             <response code="500">Oops!</response>
-            <param name="req"></param> // -- ToDo: NOT WORKING
         </member>
         <member name="M:Rcon.Function.gametype.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
             <summary>

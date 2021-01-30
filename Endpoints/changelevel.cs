@@ -19,9 +19,8 @@ namespace Rcon.Function
         /// <response code="400">Map name missing</response>
         /// <response code="401">Unauthorized</response>
         /// <response code="500">Oops!</response>
-        // [QueryStringParameter("bla","bla")] <-- ArgumentNullException
         [FunctionName("changelevel")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, String mapName, ILogger log)
         {
             var rconPayload = await new RequestParser(req).GetRconPayload();
             // check payload
