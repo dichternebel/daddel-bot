@@ -1,7 +1,6 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace Rcon.Function
 {
@@ -10,7 +9,7 @@ namespace Rcon.Function
     /// </summary>
     public class ConnectionPayload
     {
-        [JsonIgnore, BsonIgnoreIfNull, SwaggerIgnore]
+        [JsonIgnore, BsonIgnoreIfNull]
         public object Id { get; set; }
         public string AccessToken { get; set; }
         public string Server { get; set; }
@@ -19,13 +18,13 @@ namespace Rcon.Function
         public string Password { get; set; }
         public bool IsEnabled {get; set;}
         public string Role {get; set;}
-        [JsonIgnore, BsonIgnore, SwaggerIgnore]
+        [JsonIgnore, BsonIgnore]
         public bool? IsValid { get; set; }
-        [JsonIgnore, SwaggerIgnore]
+        [JsonIgnore]
         public DateTime? InsertedOn {get; set; }
-        [JsonIgnore, BsonIgnoreIfNull, SwaggerIgnore]
+        [JsonIgnore, BsonIgnoreIfNull]
         public DateTime? UpdatedOn {get; set;}
-        [JsonIgnore, BsonIgnoreIfNull, SwaggerIgnore]
+        [JsonIgnore, BsonIgnoreIfNull]
         public DateTime? TouchedOn {get; set; }
     }
 }
