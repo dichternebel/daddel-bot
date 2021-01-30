@@ -29,13 +29,13 @@ namespace Rcon.Function
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "connect")] HttpRequest req, ILogger log)
         {
             var context = new CosmosDbContext();
-            var simplePayload = await new RequestParser(req).GetRconPayload();
+            var rconPayload = await new RequestParser(req).GetRconPayload();
             if (req.ContentType.ToLower() != "application/json") return new BadRequestResult();
             // check payload
-            if (simplePayload.IsValid == null) return new UnauthorizedResult();
-            if (!simplePayload.IsValid.Value) return new BadRequestResult();
+            if (rconPayload.IsValid == null) return new UnauthorizedResult();
+            if (!rconPayload.IsValid.Value) return new BadRequestResult();
             // authorize
-            var resultObject = await context.GetConnection(simplePayload.AccessToken);
+            var resultObject = await context.GetConnection(rconPayload);
             return new OkObjectResult(resultObject);
         }
 
@@ -71,14 +71,14 @@ namespace Rcon.Function
         public static async Task<IActionResult> Run3([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "connect")] HttpRequest req, ILogger log)
         {
             var context = new CosmosDbContext();
-            var simplePayload = await new RequestParser(req).GetRconPayload();
+            var rconPayload = await new RequestParser(req).GetRconPayload();
             // authorize
-            var connectionPayload = await context.GetConnection(simplePayload.AccessToken);
+            var connectionPayload = await context.GetConnection(rconPayload);
             if (connectionPayload == null) return new UnauthorizedResult();
-            if (simplePayload.Parameter.Length > 0
-                && simplePayload.Parameter[0] == "all")
+            if (rconPayload.Parameter.Length > 0
+                && rconPayload.Parameter[0] == "all")
             {
-                await context.DeleteConnections(simplePayload.AccessToken);
+                await context.DeleteConnections(rconPayload.AccessToken);
             }
             else await context.DeleteConnection(connectionPayload);
             return new OkObjectResult("00,OK,00,00");

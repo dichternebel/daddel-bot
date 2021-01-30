@@ -22,10 +22,12 @@ namespace Rcon.Function
             string port = req.Query["port"];
             string password = req.Query["password"];
             string accessToken = req.Query["accessToken"];
+            string salt = req.Query["salt"];
             string isEnabled = req.Query["isEnabled"];
             string role = req.Query["role"];
 
             accessToken = accessToken ?? req.Headers["accessToken"];
+            salt = salt ?? req.Headers["salt"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
@@ -33,18 +35,20 @@ namespace Rcon.Function
             server = server ?? data?.server;
             port = port ?? data?.port;
             password = password ?? data?.password;
-            // accessToken = accessToken ?? data?.accessToken;
             isEnabled = isEnabled ?? data?.isEnabled;
             role = role ?? data?.role;
 
-            int tempVal;
-            int? portNumber = Int32.TryParse(port, out tempVal) ? Int32.Parse(port) : (int?)null;
+            int tempInt;
+            int? portNumber = Int32.TryParse(port, out tempInt) ? Int32.Parse(port) : (int?)null;
+            long tempLong;
+            long? saltNumber = Int64.TryParse(salt, out tempLong) ? Int64.Parse(salt) : (long?)null;
 
             var result = new ConnectionPayload {
                 AccessToken = accessToken,
                 Server = server,
                 Port = portNumber,
                 Password = password,
+                Salt = saltNumber,
                 IsEnabled = Convert.ToBoolean(isEnabled),
                 Role = role
             };
@@ -57,13 +61,16 @@ namespace Rcon.Function
         {
             string parameter = req.Query["param"];
             string accessToken = req.Query["accessToken"];
+            string salt = req.Query["salt"];
             accessToken = accessToken ?? req.Headers["accessToken"];
+            salt = salt ?? req.Headers["salt"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-
             parameter = parameter ?? data?.param;
-            // accessToken = accessToken ?? data?.accessToken;
+
+            long tempVal;
+            long? saltNumber = Int64.TryParse(salt, out tempVal) ? Int64.Parse(salt) : (long?)null;
 
             if (!string.IsNullOrWhiteSpace(parameter))
             {
@@ -79,6 +86,7 @@ namespace Rcon.Function
 
             var result = new RconPayload {
                 AccessToken = accessToken,
+                Salt = saltNumber,
                 Parameter = parameterArray
             };
 
@@ -97,6 +105,7 @@ namespace Rcon.Function
 
                 // Unauthorized
                 if (String.IsNullOrWhiteSpace(connectionPayload.AccessToken)) return null;
+                if (!connectionPayload.Salt.HasValue) return null;
 
                 // Bad Request
                 if (connectionPayload.IsEnabled)
@@ -113,6 +122,7 @@ namespace Rcon.Function
 
                 // Unauthorized
                 if (String.IsNullOrWhiteSpace(rconPayload.AccessToken)) return null;
+                if (!rconPayload.Salt.HasValue) return null;
             }
 
             return true;

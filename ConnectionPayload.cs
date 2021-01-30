@@ -16,6 +16,8 @@ namespace Rcon.Function
         public int? Port { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        [JsonIgnore, BsonIgnore]
+        public long? Salt {get; set;}
         public bool IsEnabled {get; set;}
         public string Role {get; set;}
         [JsonIgnore, BsonIgnore]

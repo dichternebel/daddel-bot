@@ -39,7 +39,7 @@ namespace Rcon.Function
 
             // authorize
             var context = new CosmosDbContext();
-            var connectionPayload = await context.GetConnection(rconPayload.AccessToken);
+            var connectionPayload = await context.GetConnection(rconPayload);
             if (connectionPayload == null)
             {
                 return new UnauthorizedResult();

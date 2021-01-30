@@ -20,15 +20,15 @@ namespace Rcon.Function
             this.settings.SslSettings =  new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
         }
 
-        public async Task<ConnectionPayload> GetConnection(string accessToken)
+        public async Task<ConnectionPayload> GetConnection(RconPayload rconPayload)
         {
             var client = new MongoClient(this.settings);
             var db = client.GetDatabase(database);
             var coll = db.GetCollection<ConnectionPayload>(collectionName);
-            var currentConnection = await coll.Find(x => x.AccessToken == accessToken).SingleOrDefaultAsync();
+            var currentConnection = await coll.Find(x => x.AccessToken == rconPayload.AccessToken).SingleOrDefaultAsync();
             if (currentConnection?.Password != null)
             {
-                currentConnection.Password = VinzClortho.Decrypt(currentConnection.Password, secKey);
+                currentConnection.Password = VinzClortho.Decrypt(currentConnection.Password, secKey + rconPayload.Salt);
             }
             return currentConnection;
         }
@@ -45,7 +45,7 @@ namespace Rcon.Function
             {
                 if (connection.Password != null)
                 {
-                    connection.Password = VinzClortho.Encrypt(connection.Password, secKey);
+                    connection.Password = VinzClortho.Encrypt(connection.Password, secKey + connection.Salt);
                 }
 
                 connection.InsertedOn = DateTime.UtcNow;
@@ -53,7 +53,7 @@ namespace Rcon.Function
                 return;
             }
 
-            var currentPwd = connection.Password == null ? foundConnection.Password : VinzClortho.Encrypt(connection.Password, secKey);
+            var currentPwd = connection.Password == null ? foundConnection.Password : VinzClortho.Encrypt(connection.Password, secKey + connection.Salt);
             var filter = Builders<ConnectionPayload>.Filter.Eq("Id", foundConnection.Id);
             var update = Builders<ConnectionPayload>.Update
                 .Set("IsEnabled", connection.IsEnabled)
