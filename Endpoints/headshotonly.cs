@@ -55,9 +55,10 @@ namespace Rcon.Function
 
                 return new OkObjectResult(await rconClient.ExecuteCommandAsync("mp_damage_headshot_only 0"));
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return new OkObjectResult("Oops! Server seems to be offline. :flushed:");
+                log.LogError(ex.Message);
+                return new OkObjectResult("Oops! Server did not respond. :flushed:");
             }
         }
     }

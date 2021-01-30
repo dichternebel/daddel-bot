@@ -50,9 +50,10 @@ namespace Rcon.Function
                 var rconCommand = "rcon " + string.Join(" ", rconPayload.Parameter);
                 return new OkObjectResult(await rconClient.ExecuteCommandAsync(rconCommand, true));
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return new OkObjectResult("Oops! Server seems to be offline. :flushed:");
+                log.LogError(ex.Message);
+                return new OkObjectResult("Oops! Server did not respond. :flushed:");
             }
         }
     }

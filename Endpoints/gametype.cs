@@ -174,10 +174,10 @@ namespace Rcon.Function
                 
                 return new OkObjectResult("Oops! That didn't work... :flushed:");
             }
-            catch (System.Exception exception)
+            catch (System.Exception ex)
             {
-                log.LogError(exception.Message);
-                return new OkObjectResult("Oops! Server seems to be offline. :flushed:");
+                log.LogError(ex.Message);
+                return new OkObjectResult("Oops! Server did not respond. :flushed:");
             }
         }
 

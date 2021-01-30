@@ -45,9 +45,10 @@ namespace Rcon.Function
                 var result = await rconClient.ExecuteCommandAsync("maps *", true);
                 return new OkObjectResult(result);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return new OkObjectResult("Oops! Server seems to be offline. :flushed:");
+                log.LogError(ex.Message);
+                return new OkObjectResult("Oops! Server did not respond. :flushed:");
             }
         }
     }

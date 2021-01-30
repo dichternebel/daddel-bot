@@ -55,9 +55,10 @@ namespace Rcon.Function
 
                 return new OkObjectResult(await rconClient.ExecuteCommandAsync("mp_maxmoney 700; mp_startmoney 700; mp_afterroundmoney 700; mp_overtime_startmoney 700; bot_pistols_only 1; mp_dm_bonus_length_max 0; sv_infinite_ammo 2; mp_weapons_allow_heavy 0; mp_weapons_allow_pistols -1; mp_weapons_allow_rifles 0; mp_weapons_allow_smgs 0;"));
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return new OkObjectResult("Oops! Server seems to be offline. :flushed:");
+                log.LogError(ex.Message);
+                return new OkObjectResult("Oops! Server did not respond. :flushed:");
             }
         }
     }
