@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Rcon.Function
 {
@@ -30,13 +31,16 @@ namespace Rcon.Function
             salt = salt ?? req.Headers["salt"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            var data = JsonConvert.DeserializeObject<JObject>(requestBody);
 
-            server = server ?? data?.server;
-            port = port ?? data?.port;
-            password = password ?? data?.password;
-            isEnabled = isEnabled ?? data?.isEnabled;
-            role = role ?? data?.role;
+            if (data != null)
+            {
+                server = server ?? (data.ContainsKey("server") ? data.GetValue("server").ToString() : null);
+                port = port ?? (data.ContainsKey("port") ? data.GetValue("port").ToString() : null);
+                password = password ?? (data.ContainsKey("password") ? data.GetValue("password").ToString() : null);
+                isEnabled = isEnabled ?? (data.ContainsKey("isEnabled") ? data.GetValue("isEnabled").ToString() : null);
+                role = role ?? (data.ContainsKey("role") ? data.GetValue("role").ToString() : null);
+            }
 
             int tempInt;
             int? portNumber = Int32.TryParse(port, out tempInt) ? Int32.Parse(port) : (int?)null;
@@ -66,8 +70,11 @@ namespace Rcon.Function
             salt = salt ?? req.Headers["salt"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            parameter = parameter ?? data?.param;
+            var data = JsonConvert.DeserializeObject<JObject>(requestBody);
+            if (data != null)
+            {
+                parameter = parameter ?? (data.ContainsKey("param") ? data.GetValue("param").ToString() : null);
+            }
 
             long tempVal;
             long? saltNumber = Int64.TryParse(salt, out tempVal) ? Int64.Parse(salt) : (long?)null;
@@ -79,7 +86,8 @@ namespace Rcon.Function
                 HttpUtility.HtmlDecode(parameter, myWriter);
                 parameter = myWriter.ToString();
             }
-            else {
+            else
+            {
                 parameter = "";
             }
             var parameterArray = parameter.Split(' ');

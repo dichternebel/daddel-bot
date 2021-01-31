@@ -133,17 +133,9 @@
             <response code="400">Invalid request</response>
             <response code="401">Unauthorized</response>
         </member>
-        <member name="M:Rcon.Function.warmup_end.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
-            <summary>
-            ends warm up in 10 sec.
-            </summary>
-            <response code="200">Successful operation</response>
-            <response code="400">Invalid request</response>
-            <response code="401">Unauthorized</response>
-        </member>
         <member name="M:Rcon.Function.warmup_start.Run(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.Extensions.Logging.ILogger)">
             <summary>
-            restarts warmup in 3 sec.
+            restarts or ends warm-up
             </summary>
             <response code="200">Successful operation</response>
             <response code="400">Invalid request</response>
