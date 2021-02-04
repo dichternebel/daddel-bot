@@ -21,10 +21,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: rcon-function
-
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
 #
@@ -34,7 +30,7 @@ defaults:
 # 2. Change these variables for your configuration:
 env:
   AZURE_FUNCTIONAPP_NAME: rcon                         # set this to your application's name
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: ''    # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'rcon-function'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1.111'                            # set this to the dotnet version to use
 
 jobs:
