@@ -21,6 +21,9 @@ on:
     - '!csgo-rcon-bot/**.md'
     - '!csgo-rcon-bot/.gitignore'
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 defaults:
   run:
     working-directory: ./csgo-rcon-bot
