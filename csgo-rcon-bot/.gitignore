@@ -1,3 +1,8 @@
 .vscode/
-bin/
 node_modules/
+# git-secret
+.env
+server/daddelbot.service
+git-secret.key
+!/.git-secret/**
+.gitsecret/keys/random_seed

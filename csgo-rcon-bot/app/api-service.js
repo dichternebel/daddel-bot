@@ -1,17 +1,17 @@
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const superagent = require('superagent');
 
 module.exports =
 {
-    get: async (config, discordConfig, command, param) => {
-        let rconCommand = ` --host ${discordConfig.get('server')} --port ${discordConfig.get('port')} --password ${discordConfig.get('password')} ${command} `;
-        if (param) rconCommand += param;
-
-        try {
-            const { stdout, stderr } = await exec(config.get('RCON_CLI_PATH') + rconCommand);
-            return stdout;
-        } catch (error) {
-            return "Oops! Could not connect to server. :flushed:\n" + error.stderr;
-        }
+    get: async(endpoint, payload) => {
+        return await superagent.get(endpoint.url).send({param: payload.param}).set('x-functions-key', endpoint.authKey).set('accessToken', payload.accessToken).set('salt', payload.salt);
+    },
+    getJson: async(endpoint, payload) => {
+        return await superagent.get(endpoint.url).type('json').send(payload.param).set('x-functions-key', endpoint.authKey).set('accessToken', payload.accessToken).set('salt', payload.salt);
+    },
+    postJson: async(endpoint, jsonObj) => {
+        return await superagent.post(endpoint.url).type('json').send(jsonObj).set('x-functions-key', endpoint.authKey).set('accessToken', jsonObj.accessToken).set('salt', jsonObj.salt);
+    },
+    delete: async(endpoint, payload) => {
+        return await superagent.delete(endpoint.url).send(payload.param).set('x-functions-key', endpoint.authKey).set('accessToken', payload.accessToken).set('salt', payload.salt);
     }
 };

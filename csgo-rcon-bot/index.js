@@ -16,7 +16,8 @@ if (process.env.NODE_ENV != 'production') {
 // Configure app
 config.set('BOT_TOKEN', process.env.BOT_TOKEN);
 config.set('IMG_BASEURL', process.env.IMG_BASEURL);
-config.set('RCON_CLI_PATH', process.env.RCON_CLI_PATH);
+config.set('API_KEY', process.env.API_KEY);
+config.set('API_URL', process.env.API_URL);
 
 // Start that thing and inject client and config
 const client = new Discord.Client({ disableMentions: 'everyone' });

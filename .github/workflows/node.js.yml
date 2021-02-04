@@ -1,0 +1,63 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'csgo-rcon-bot/**'
+    - '!csgo-rcon-bot/.gitsecret/**'
+    - '!csgo-rcon-bot/.vscode/**'
+    - '!csgo-rcon-bot/**.md'
+    - '!csgo-rcon-bot/.gitignore'
+  pull_request:
+    branches: [ main ]
+    paths:
+    - 'csgo-rcon-bot/**'
+    - '!csgo-rcon-bot/.gitsecret/**'
+    - '!csgo-rcon-bot/.vscode/**'
+    - '!csgo-rcon-bot/**.md'
+    - '!csgo-rcon-bot/.gitignore'
+
+defaults:
+  run:
+    working-directory: ./csgo-rcon-bot
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+    - name: ssh deploy
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: "-rltgoDzvO -avzr --delete --exclude={'.git'}"
+        SOURCE: "./csgo-rcon-bot"
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: ${{ secrets.REMOTE_TARGET }}
+    - name: restart systemctl service
+      uses: fifsky/ssh-action@master
+      with:
+        command: |
+          sudo systemctl restart daddelbot.service
+        host: ${{ secrets.REMOTE_HOST }}
+        user: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY}}

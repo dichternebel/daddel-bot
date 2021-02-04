@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const escape = require('escape-markdown');
 const splitLines = require('split-lines');
+const apiService = require("./api-service");
 
 class DiscordService {
     constructor(message, isAdmin) {
@@ -131,29 +132,27 @@ class DiscordService {
     configureBot(config, discordConfiguration) {
         let ttl = 90000;
 
-        // gets and sets the ACCESS_TOKEN
-        if (!(discordConfiguration.get('accessToken'))) {
-            discordConfiguration.set('accessToken', `${this.message.channel.guild.id}-${this.message.channel.id}`);
+        // gets and sets the ACCESS_TOKEN and SALT
+        if (!discordConfiguration.accessToken) {
+            discordConfiguration.accessToken = `${this.message.channel.guild.id}-${this.message.channel.id}`;
+            discordConfiguration.salt = this.message.channel.createdTimestamp;
         }
 
-        let currentServer = discordConfiguration.get('server')? discordConfiguration.get('server') : 'empty';
-        let currentPort = discordConfiguration.get('port');
-        let currentPassword = discordConfiguration.get('password')? discordConfiguration.get('password') : 'empty';
-        let currentRole = discordConfiguration.get('role')? discordConfiguration.get('role') : 'none';
+        let currentServer = discordConfiguration.server? discordConfiguration.server : 'empty';
+        let currentPort = discordConfiguration.port;
+        let currentRole = discordConfiguration.role? discordConfiguration.role : 'none';
 
-        // obfuscate displayed password
-        if (currentPassword.length > 4)
-        currentPassword = currentPassword.charAt(0)
-                        + currentPassword.charAt(1)
-                        + "•••••"
-                        + currentPassword.charAt(currentPassword.length-2)
-                        + currentPassword.charAt(currentPassword.length-1);
-
+        // prepare the payload for API call
+        const endpoint = {
+            url: `${config.get('API_URL')}/connect`,
+            authKey: config.get('API_KEY')
+        };
+        
         let messageContext;
         let initialMessage;
 
         this.message.author.send(
-            "**Aloha Admin!**\nLet's have some configuration fun together! :sweat_smile:\nHINT: You can call this dialog using `" + config.get('PREFIX') + " config` anytime again.\nDo you want to enable the bot for this channel? [Y/N]"
+            "**Moin Admin!**\nLet's have some configuration fun together! :sweat_smile:\nHINT: You can call this dialog using `" + config.get('PREFIX') + " config` anytime again.\n\nDo you want to enable the bot for this channel? [Y/N]"
         )
         .then((msg) => {
             initialMessage = msg;
@@ -172,10 +171,11 @@ class DiscordService {
                 throw ('Timed out.');
             }
             if (collected.array()[0].content.toLowerCase() != 'n') {
-                discordConfiguration.set('isEnabled', true);
+                discordConfiguration.isEnabled = true;
             }
             else {
-                discordConfiguration.set('isEnabled', false);
+                discordConfiguration.isEnabled = false;
+                apiService.postJson(endpoint, discordConfiguration);
                 throw ('Disabled. :no_mouth:');
             }
             this.sendMessageToContext(
@@ -197,7 +197,7 @@ class DiscordService {
                 throw ('Timed out.');
             }
             if (collected.array()[0].content.toLowerCase() != 'n') {
-                discordConfiguration.set('server', collected.array()[0].content.trim());
+                discordConfiguration.server = collected.array()[0].content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
@@ -221,10 +221,10 @@ class DiscordService {
             let content = collected.array()[0].content.trim().toLowerCase();
             // entered a number?
             if (content === 'n' || !isNaN(content)) {
-                if (content != 'n') discordConfiguration.set('port', content);
+                if (content != 'n') discordConfiguration.port = content;
                 return this.sendMessageToContext(
                     messageContext,
-                    "Do you want to change the CS:GO server RCON password? [N = NO]\n*currently ` " + escape(currentPassword) + " `*",
+                    "Do you want to change the CS:GO server RCON password? [N = NO]",
                     ttl
                 );
             }
@@ -245,7 +245,7 @@ class DiscordService {
                 throw ('Timed out.');
             }
             if (collected.array()[0].content.toLowerCase() != 'n') {
-                discordConfiguration.set('password', collected.array()[0].content.trim());
+                discordConfiguration.password = collected.array()[0].content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
@@ -266,19 +266,25 @@ class DiscordService {
                 throw ('Timed out.');
             }
             if (collected.array()[0].content.toLowerCase() === 'n') {
-                discordConfiguration.delete('role');
+                discordConfiguration.role = null;
             }
             else {
-                discordConfiguration.set('role', collected.array()[0].content);
+                discordConfiguration.role = collected.array()[0].content;
             }
-            this.sendMessageToContext(
-                messageContext,
-                "You may safely delete your answers now. Done! :thumbsup:",
-                ttl
-            );
+            apiService.postJson(endpoint, discordConfiguration)
+            .then(() => {
+                this.sendMessageToContext(
+                    messageContext,
+                    "You may safely delete your answers now. Done! :thumbsup:",
+                    ttl
+                )
+            })
+            .catch( err => {
+                console.log(err);
+                this.reactWithError(err);
+            });
         })
         .catch( err => {
-            console.log(err);
             this.sendMessageToContext(messageContext, err, ttl);
         })
         .finally(() => {

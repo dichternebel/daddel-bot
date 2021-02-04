@@ -6,6 +6,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+    directory: "./csgo-rcon-bot/" # Location of package manifests
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "./rcon-function/" # Location of package manifests
     schedule:
       interval: "daily"

@@ -1,7 +1,8 @@
+const Ajv = require("ajv").default;
 const Discord = require("discord.js");
 const DiscordService = require("../discord-service");
+const apiService = require("../api-service");
 const DiscordConfig = require("../../config/discord-config");
-const Conf = require("conf");
 
 module.exports = function (client,config,message,newMessage) {
     // guard for bots
@@ -36,50 +37,73 @@ module.exports = function (client,config,message,newMessage) {
         const service = new DiscordService(message, isAdmin);
 
         // Get discord config
-        let schema = DiscordConfig.schema;
+        const endpoint = {
+            url: `${config.get('API_URL')}/connect`,
+            authKey: config.get('API_KEY')
+        };
+        const param = {
+            accessToken: `${message.guild.id}-${message.channel.id}`,
+            salt: message.channel.createdTimestamp
+        }
+        apiService.getJson(endpoint, param)
+        .then((response) => {
+            // Instantiate a config object with defaults
+            const ajv = new Ajv({useDefaults: true})
+            const schema = {
+                type: 'object',
+                properties: DiscordConfig.schema
+            };
+            const validate = ajv.compile(schema);
+            const discordConfig = {};
+            validate(discordConfig);
+            // assign the repsonse to the default config
+            Object.assign(discordConfig, response.body);
+            // add salt
+            discordConfig.salt = param.salt;
+            
+            if (!discordConfig.isEnabled)
+            {
+                if (!isAdmin) {
+                    service.sendMessageToChannel("Sorry, " + message.author.username + "!\nI am out of order in this channel. :no_mouth:");
+                    return;
+                }
+                else if (command != 'config_remove' && command != '-rm') {
+                    service.configureBot(config, discordConfig);
+                    return;
+                }
+            }
 
-        // grab the configuration for current session
-        const discordConfig = new Conf({
-            schema,
-            configName: `${message.guild.id}/${message.channel.id}`
-        });
+            // get permissions
+            let isInRole = true;
+            if (discordConfig.role) {
+                isInRole = member.roles.cache.some(role => role.name === discordConfig.role);
+            }
 
-        if (!discordConfig.get('isEnabled'))
-        {
-            if (!isAdmin) {
-                service.sendMessageToChannel("Sorry, " + message.author.username + "!\nI am out of order in this channel. :no_mouth:");
+            // authorize
+            if (!isInRole && !isAdmin) {
+                service.sendMessageToChannel("Sorry, " + message.author.username + "!\nI am currently not allowed to execute your commands, because your are not in role `" + discordConfig.role + "`.\nPlease contact an admin in charge. :sweat_smile:");
                 return;
             }
-            service.configureBot(config, discordConfig);
-            return;
-        }
-
-        // get permissions
-        let isInRole = true;
-        if (discordConfig.get('role')) {
-            isInRole = member.roles.cache.some(role => role.name === discordConfig.get('role'));
-        }
-
-        // authorize
-        if (!isInRole && !isAdmin) {
-            service.sendMessageToChannel("Sorry, " + message.author.username + "!\nI am currently not allowed to execute your commands, because your are not in role `" + discordConfig.get('role') + "`.\nPlease contact an admin in charge. :sweat_smile:");
-            return;
-        }
-        if (!command) {
-            service.sendMessageToChannel("What can I do for you, " + message.author.username + "?\nHint: You could start by typing `" + config.get('PREFIX') + " help`");
-            return;
-        }
-        else { // let's check if we know the command or not
-            let knownCommand = client.commands.get(command);
-            if (!knownCommand) knownCommand = client.commands.get(client.aliasses.get(command));
-            if (knownCommand) {
-                if (knownCommand === 'help' || knownCommand.name === 'help') args = Array.from(client.publicCommands);
-                knownCommand.execute(config, discordConfig, service, command, args);
+            if (!command) {
+                service.sendMessageToChannel("What can I do for you, " + message.author.username + "?\nHint: You could start by typing `" + config.get('PREFIX') + " help`");
+                return;
             }
-            else {
-                service.sendMessageToChannel("Uhmm... I didn't get that, " + message.author.username +".\nImho, you should try `" + config.get('PREFIX') + " help` :smirk:");
+            else { // let's check if we know the command or not
+                let knownCommand = client.commands.get(command);
+                if (!knownCommand) knownCommand = client.commands.get(client.aliasses.get(command));
+                if (knownCommand) {
+                    if (knownCommand === 'help' || knownCommand.name === 'help') args = Array.from(client.publicCommands);
+                    knownCommand.execute(config, discordConfig, service, command, args);
+                }
+                else {
+                    service.sendMessageToChannel("Uhmm... I didn't get that, " + message.author.username +".\nImho, you should try `" + config.get('PREFIX') + " help` :smirk:");
+                }
             }
-        }
+        })
+        .catch(err => {
+            console.log(err);
+            service.reactWithError(err);
+        });
     })
     .catch(err => console.log(err));
 }

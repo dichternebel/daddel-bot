@@ -9,8 +9,8 @@ module.exports =
         try {
             state = await GameDig.query({
               type: 'csgo',
-              host: discordConfig.get('server'),
-              port: discordConfig.get('port')
+              host: discordConfig.server,
+              port: discordConfig.port
             });
             state.offline = false;
             state.connect = `<steam://connect/${state.connect}>`;

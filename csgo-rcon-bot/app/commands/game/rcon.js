@@ -15,10 +15,23 @@ module.exports =
             if (args.length > 0) {
                 param = args.join(' ');
             }
-
-            const response = await apiService.get(config, discordConfig, command, param);
+            const payload = {
+                accessToken: discordConfig.accessToken,
+                salt: discordConfig.salt,
+                param: param
+            }
+            // guard for useless API calls
+            if (!payload.accessToken || !payload.salt) {
+                service.message.react("👎").catch(err => console.log(err));
+                return;
+            }
+            const endpoint = {
+                url: `${config.get('API_URL')}/${command}`,
+                authKey: config.get('API_KEY')
+            };
+            const response = await apiService.get(endpoint, payload);
             const messageTitle = "CS:GO Server RCON";
-            const embed = service.getRichEmbed(messageTitle, response);
+            const embed = service.getRichEmbed(messageTitle, response.text);
 
             service.sendMessageToChannel(embed);
         } catch (err) {

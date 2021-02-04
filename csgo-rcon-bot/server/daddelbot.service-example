@@ -1,0 +1,24 @@
+[Unit]
+# Custom description, set as you wish
+Description=node.js daddelbot app
+After=network.target
+
+[Service]
+Type=simple
+# Name of the system user running the app
+User=botuser
+# If your app needs more environmental variables, just add more "Environment=" lines, or load them from a file (e.g. a "dotfile") with the "EnvironmentFile" rule
+Environment=NODE_ENV=production
+Environment=BOT_TOKEN=[YourDiscordBotToken]
+Environment=IMG_BASEURL=[YourMapImageBaseUrlWithEndingSlash]
+Environment=API_KEY=[YourApiToken]
+Environment=API_URL=[YourApiUrl]
+# Full path to the code
+WorkingDirectory=/var/app/current/daddelbot
+# Full path to the Node.js binary - use "which node" to find it out
+ExecStart=/usr/local/bin/node index.js
+# This tells systemd to restart the app if it crashes
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

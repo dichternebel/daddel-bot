@@ -9,10 +9,16 @@ module.exports =
         },
         PREFIX: {
             type: 'string',
-            default: '!csgo'
+            default: '!cs'
         },
         IMG_BASEURL: {
             type: 'string'
-        }
+        },
+        API_KEY: {
+            type: 'string'
+        },
+        API_URL: {
+            type: 'string'
+        },
     }
 };

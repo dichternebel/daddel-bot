@@ -7,9 +7,21 @@ module.exports =
 	execute: async (config, discordConfig, service, command, args) =>
 	{
         try {
-            command = 'maps *';
-            const response = await apiService.get(config, discordConfig, command);
-            const embed = service.getMapsEmbed(response);
+            const payload = {
+                accessToken: discordConfig.accessToken,
+                salt: discordConfig.salt
+            }
+            // guard for useless API calls
+            if (!payload.accessToken || !payload.salt) {
+                service.message.react("👎").catch(err => console.log(err));
+                return;
+            }
+            const endpoint = {
+                url: `${config.get('API_URL')}/${command}`,
+                authKey: config.get('API_KEY')
+            };
+            const response = await apiService.get(endpoint, payload);
+            const embed = service.getMapsEmbed(response.text);
 
             service.sendMessageToChannel(embed, 120000);
         } catch (err) {

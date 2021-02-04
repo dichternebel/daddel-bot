@@ -1,9 +1,6 @@
 module.exports =
 {
     schema: {
-        accessToken: {
-            type: 'string',
-        },
         server: {
             type: 'string',
         },
@@ -15,6 +12,12 @@ module.exports =
             type: 'string'
         },
         role: {
+            type: 'string'
+        },
+        accessToken: {
+            type: 'string'
+        },
+        salt: {
             type: 'string'
         },
         isEnabled: {
