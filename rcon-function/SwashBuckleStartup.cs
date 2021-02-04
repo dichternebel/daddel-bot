@@ -34,7 +34,7 @@ namespace Rcon.Function
                     {
                         Name = "v1",
                         Title = "RCON Function (CSGO)",
-                        Description = "Swagger document for RCON function used by 'daddelbot'.<br />Invite link:<a href=\"https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=10304&scope=bot\">https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=10304&scope=bot</a>",
+                        Description = "Swagger document for RCON function used by 'daddelbot'.<br />Invite link:<a href=\"https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=27712&scope=bot\">https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=27712&scope=bot</a>",
                         Version = "v3"
                     }
                 };

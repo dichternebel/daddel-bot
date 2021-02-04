@@ -15,12 +15,12 @@ In order to build and run the bot you need to download and install following in 
 
 * [Node.js](https://nodejs.dev/) >= v12.x (developed with v15.7.0)
 * `git clone` the whole repo or [download zip](https://github.com/dichternebel/daddel-bot/archive/main.zip) package (backend included)
-* In order to clone the bot only you can use these commands:
-  `git init csgo-rcon-bot
-  cd csgo-rcon-bot
-  git remote add origin https://github.com/dichternebel/daddel-bot.git
-  git config core.sparsecheckout true
-  echo "csgo-rcon-bot/*" >> .git/info/sparse-checkout
+* In order to clone the bot only you can use these commands:  
+  `git init csgo-rcon-bot  
+  cd csgo-rcon-bot  
+  git remote add origin https://github.com/dichternebel/daddel-bot.git  
+  git config core.sparsecheckout true  
+  echo "csgo-rcon-bot/*" >> .git/info/sparse-checkout  
   git pull --depth=1 origin main`
 
 ### Build
@@ -34,7 +34,7 @@ In order to build and run the bot you need to download and install following in 
 
 ### Customization
 
-Adding new commands or changing existing can be done by simply adding/changing command files to the `/app/commands/game/` folder. You just have to respect some methods. Copy one file as a template to get started.
+Adding new commands or changing existing can be done by simply adding/changing command files to/in the `/app/commands/game/` folder. You just have to respect some methods. Copy one file as a template to get started.
 
 ### Run
 
@@ -55,4 +55,3 @@ Adding new commands or changing existing can be done by simply adding/changing c
 ### CI/CD
 
 I'm using GitHub Actions to build and deploy the bot on every push or PR to the main branch. If your target platform is Linux then you might just grab the deployment script from the `/.github/workflows` folder and change it to match your own target server.
-
