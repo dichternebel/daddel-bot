@@ -1,0 +1,5 @@
+# git-secret
+.gitsecret/keys/random_seed
+csgo-rcon-bot/.env
+csgo-rcon-bot/server/daddelbot.service
+rcon-function/local.settings.json
