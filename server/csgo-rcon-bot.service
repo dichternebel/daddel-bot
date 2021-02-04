@@ -1,0 +1,25 @@
+[Unit]
+# Custom description, set as you wish
+Description=Node.js csgo-rcon-bot app
+After=network.target
+
+[Service]
+Type=simple
+# Name of the system user running the app
+User=azureuser
+# Port the app is bound to, in this case 3000 (must be greater than 1024)
+# If your app needs more environmental variables, just add more "Environment=" lines, or load them from a file (e.g. a "dotfile") with the "EnvironmentFile" rule
+Environment=NODE_ENV=production
+Environment=BOT_TOKEN=YourVerySecretBotTokenGoesHere
+Environment=IMG_BASEURL=https://proud-dune-027bff803.azurestaticapps.net/
+Environment=RCON_CLI_PATH=/full/path/to/rcon-cli
+# Path where the code is
+WorkingDirectory=/var/app/current/csgo-rcon-bot
+# Full path to the Node.js binary - if you prefer to specify a version, use the full path like "/usr/local/node-v10.14.1-linux-x64/bin/node"
+# If your app's entrypoint isn't "bin/www", change this line
+ExecStart=/usr/local/bin/node index.js
+# This tells systemd to restart the app if it crashes
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
