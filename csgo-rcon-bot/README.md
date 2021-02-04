@@ -15,13 +15,15 @@ In order to build and run the bot you need to download and install following in 
 
 * [Node.js](https://nodejs.dev/) >= v12.x (developed with v15.7.0)
 * `git clone` the whole repo or [download zip](https://github.com/dichternebel/daddel-bot/archive/main.zip) package (backend included)
-* In order to clone the bot only you can use these commands:\
-  `git init csgo-rcon-bot
-      cd csgo-rcon-bot
-      git remote add origin https://github.com/dichternebel/daddel-bot.git
-      git config core.sparsecheckout true
-      echo "csgo-rcon-bot/*" >> .git/info/sparse-checkout
-      git pull --depth=1 origin main`
+* In order to clone the bot only you can use these commands:
+<pre>
+    `git init csgo-rcon-bot
+    cd csgo-rcon-bot
+    git remote add origin https://github.com/dichternebel/daddel-bot.git
+    git config core.sparsecheckout true
+    echo "csgo-rcon-bot/*" >> .git/info/sparse-checkout
+    git pull --depth=1 origin main`
+</pre>
 
 ### Build
 

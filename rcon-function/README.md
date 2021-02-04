@@ -17,13 +17,15 @@ In order to build and run the API you need to download and install following in 
 * [MongoDB](https://www.mongodb.com/try/download/community) or alternatively use a Cosmos DB on Azure
 * [VS Code](https://code.visualstudio.com/download) or alternatively you might want to try *GitHub Codespaces*.
 * `git clone` the whole repo or [download zip](https://github.com/dichternebel/daddel-bot/archive/main.zip) package (discord bot included)
-* In order to clone the API only you can try these commands:\
-  `git init rcon-function
-      cd rcon-function
-      git remote add origin https://github.com/dichternebel/daddel-bot.git
-      git config core.sparsecheckout true
-      echo "rcon-function/*" >> .git/info/sparse-checkout
-      git pull --depth=1 origin main`
+* In order to clone the API only you can try these commands:
+<pre>
+    `git init rcon-function
+    cd rcon-function
+    git remote add origin https://github.com/dichternebel/daddel-bot.git
+    git config core.sparsecheckout true
+    echo "rcon-function/*" >> .git/info/sparse-checkout
+    git pull --depth=1 origin main`
+</pre>
 
 ### Build
 
