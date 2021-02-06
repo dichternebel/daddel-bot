@@ -127,8 +127,8 @@ namespace Rcon.Function
                 }
                 if (gameType == GameTypes.deathmatch)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 0; exec op08_bounty_hunter; map {currentMap}; mapgroup {currentMapGroup};");
-                    return new OkObjectResult($"Switched server to mode 'Armsrace'.\n{resp}");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec op08_bounty_hunter; map {currentMap}; mapgroup {currentMapGroup};");
+                    return new OkObjectResult($"Switched server to mode 'Deathmatch'.\n{resp}");
                 }
                 if (gameType == GameTypes.teamdeathmatch)
                 {
@@ -153,6 +153,7 @@ namespace Rcon.Function
             {
                 case GameTypes.armsrace:
                 case GameTypes.deathmatch:
+                case GameTypes.teamdeathmatch:
                     filteredList = mapList.Where(x => x.Contains("ar_")).ToList();
                 break;
                 
