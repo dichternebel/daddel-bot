@@ -127,7 +127,12 @@ namespace Rcon.Function
                 }
                 if (gameType == GameTypes.deathmatch)
                 {
-                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_teamdeathmatch; map {currentMap}; mapgroup {currentMapGroup}; sv_infinite_ammo 2;");
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 0; exec op08_bounty_hunter; map {currentMap}; mapgroup {currentMapGroup};");
+                    return new OkObjectResult($"Switched server to mode 'Armsrace'.\n{resp}");
+                }
+                if (gameType == GameTypes.teamdeathmatch)
+                {
+                    var resp = await rconClient.ExecuteCommandAsync($"game_type 1; game_mode 2; exec gamemode_teamdeathmatch; map {currentMap}; mapgroup {currentMapGroup};");
                     return new OkObjectResult($"Switched server to mode 'Team Deathmatch'.\n{resp}");
                 }
                 
