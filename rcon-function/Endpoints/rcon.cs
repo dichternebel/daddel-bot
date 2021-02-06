@@ -47,7 +47,7 @@ namespace Rcon.Function
             {
                 // instantiate client and execute command
                 var rconClient = await new RconService(connectionPayload, context).GetClient();
-                var rconCommand = "rcon " + string.Join(" ", rconPayload.Parameter);
+                var rconCommand = string.Join(" ", rconPayload.Parameter);
                 return new OkObjectResult(await rconClient.ExecuteCommandAsync(rconCommand, true));
             }
             catch (System.Exception ex)
