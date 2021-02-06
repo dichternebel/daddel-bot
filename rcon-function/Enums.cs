@@ -9,7 +9,6 @@ namespace Rcon.Function
         wingman,
         dangerzone,
         deathmatch,
-        teamdeathmatch,
         armsrace
     }
 
