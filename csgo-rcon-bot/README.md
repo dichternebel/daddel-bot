@@ -32,7 +32,7 @@ git pull --depth=1 origin main
 ### Configuration
 
 * for local development rename the `/.env-example` file to `/.env` and configure your local settings.
-* for deployment rename and edit either the `/config/daddelbot.service-example`  file to `/config/daddelbot.service` or edit the `/config/start.bat` file.
+* for deployment rename and edit either the `/server/daddelbot.service-example`  file to `/server/daddelbot.service` or edit the `/server/start.bat` file.
 
 ### Customization
 
@@ -45,14 +45,14 @@ Adding new commands or changing existing can be done by simply adding/changing c
 ### Installation
 
 * On Linux Ubuntu
-    * copy the `.service` file to /etc/systemd/system 
+    * copy the edited `/server/daddelbot.service` file to /etc/systemd/system 
     * `sudo systemctl enable daddelbot.service`
     * `sudo systemctl start daddelbot.service`
 
 * On Windows
     * download the [NSSM](https://nssm.cc/download) and unzip
     * `nssm install daddel-bot`
-    * Path to where the `start.bat` is located
+    * Path to where the edited `start.bat` is located
 
 ### CI/CD
 
