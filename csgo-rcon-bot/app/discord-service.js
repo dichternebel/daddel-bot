@@ -12,7 +12,10 @@ class DiscordService {
     // gives back a MessageEmbed object based on given content
     getRichEmbed(title, description) {
         const color = this.isValid(description)? "#0099ff" : "#cc3300";
-
+        // respect discord limit for embeds
+        if (description.length > 2048) {
+            description = description.substring(1,2044) + " ...";
+        }
         const embed = new Discord.MessageEmbed()
             .setTitle(title)
             .setColor(color)
@@ -49,7 +52,7 @@ class DiscordService {
         return embed;
     }
 
-    // creates and gives back a fancy status embed
+    // creates and gives back a fancy maps embed
     getMapsEmbed(responseText) {
         const title = "CS:GO Server Maps";
         if (!this.isValid(responseText)) {
