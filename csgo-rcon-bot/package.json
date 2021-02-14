@@ -19,7 +19,7 @@
     "build": "npm install"
   },
   "dependencies": {
-    "ajv": "^7.0.4",
+    "ajv": "^7.1.0",
     "conf": "^9.0.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
