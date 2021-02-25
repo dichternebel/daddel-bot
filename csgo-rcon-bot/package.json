@@ -25,7 +25,7 @@
     "dotenv": "^8.2.0",
     "escape-markdown": "^1.0.4",
     "fs": "0.0.1-security",
-    "gamedig": "^2.0.27",
+    "gamedig": "^2.0.28",
     "node-fetch": "^2.6.1",
     "split-lines": "^2.0.0",
     "superagent": "^6.1.0"
