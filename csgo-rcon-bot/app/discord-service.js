@@ -183,7 +183,7 @@ class DiscordService {
             }
             this.sendMessageToContext(
                 messageContext,
-                "Do you want to change the CS:GO server address? [N = NO]\n*currently ` " + currentServer +" `*",
+                "What's the CS:GO server address? [`s` = skip]\n*currently ` " + currentServer +" `*",
                 ttl
             );
         })
@@ -199,12 +199,12 @@ class DiscordService {
             if (!(collected.array().length)) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() != 'n') {
+            if (collected.array()[0].content.toLowerCase() != 's') {
                 discordConfiguration.server = collected.array()[0].content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
-                "Do you want to change the CS:GO server port? [N = NO]\n*currently ` " + currentPort + " `*",
+                "What's the CS:GO server port? [`s` = skip]\n*currently ` " + currentPort + " `*",
                 ttl
             );
         })
@@ -223,11 +223,11 @@ class DiscordService {
 
             let content = collected.array()[0].content.trim().toLowerCase();
             // entered a number?
-            if (content === 'n' || !isNaN(content)) {
-                if (content != 'n') discordConfiguration.port = content;
+            if (content === 's' || !isNaN(content)) {
+                if (content != 's') discordConfiguration.port = content;
                 return this.sendMessageToContext(
                     messageContext,
-                    "Do you want to change the CS:GO server RCON password? [N = NO]",
+                    "What's the CS:GO server RCON password? [`s` = skip]",
                     ttl
                 );
             }
@@ -247,12 +247,12 @@ class DiscordService {
             if (!(collected.array().length)) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() != 'n') {
+            if (collected.array()[0].content.toLowerCase() != 's') {
                 discordConfiguration.password = collected.array()[0].content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
-                "**OPTIONAL**:\nEnter a custom *ROLE* name to limit user communication with the bot. Admins are always allowed. [N = NONE]\n*currently ` " + currentRole + " `*",
+                "**OPTIONAL**:\nEnter a custom *ROLE* name to limit user communication with the bot. Admins are always allowed. [`n` = none]\n*currently ` " + currentRole + " `*",
                 ttl
             );
         })
@@ -293,7 +293,7 @@ class DiscordService {
         .finally(() => {
             initialMessage.delete({ timeout: 30000 }).catch(err => console.log(err));
         });
-    };
+    }
 }
 
 module.exports = DiscordService;
