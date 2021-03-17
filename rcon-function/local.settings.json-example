@@ -3,7 +3,7 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
 
-    "mongodb-connection-string": "mongodb://[YourConnectionStringGoesHere]&retrywrites=false",
+    "mongodb-connection-string": "mongodb://[YourConnectionStringGoesHere]&retrywrites=false&connectTimeoutMS=30000&socketTimeoutMS=30000&waitQueueTimeoutMS=30000&maxIdleTimeMS=45000",
     "database": "[DbNameGoesHere]",
     "collectionName": "[CollectionNameGoesHere]",
     "keyMaster": "[EncryptionMasterKeyGoesHere]"
