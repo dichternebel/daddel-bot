@@ -1,4 +1,4 @@
-# csgo-rcon-bot [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dichternebel/csgo-rcon-bot/blob/main/LICENSE.md) [![PR's Welcome](https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg)](http://makeapullrequest.com) ![CI/CD](https://github.com/dichternebel/daddel-bot/workflows/Node.js%20CI/CD/badge.svg?branch=main)
+# csgo-rcon-bot [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dichternebel/csgo-rcon-bot/blob/main/LICENSE.md) [![PR's Welcome](https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg)](http://makeapullrequest.com) [![Discord Bot CI/CD](https://github.com/dichternebel/daddel-bot/actions/workflows/bot-ci-cd.yml/badge.svg)](https://github.com/dichternebel/daddel-bot/actions/workflows/bot-ci-cd.yml)
 This discord bot can execute RCON commands on CS:GO/SRCDS servers using an API backend.
 
 ## Getting started
