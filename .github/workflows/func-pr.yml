@@ -9,6 +9,7 @@ on:
     - '!rcon-function/.vscode/**'
     - '!rcon-function/**.md'
     - '!rcon-function/.gitignore'
+    - '!rcon-function/local.settings.json-example'
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
