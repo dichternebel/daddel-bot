@@ -9,14 +9,6 @@ on:
     - '!rcon-function/.vscode/**'
     - '!rcon-function/**.md'
     - '!rcon-function/.gitignore'
-  pull_request:
-    branches: [ main ]
-    paths:
-    - 'rcon-function/**'
-    - '!rcon-function/.gitsecret/**'
-    - '!rcon-function/.vscode/**'
-    - '!rcon-function/**.md'
-    - '!rcon-function/.gitignore'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
