@@ -13,7 +13,7 @@ public static class swagger
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "swagger/json")] HttpRequestMessage req,
         [SwashBuckleClient]ISwashBuckleClient swashBuckleClient)
     {
-        return Task.FromResult(swashBuckleClient.CreateSwaggerDocumentResponse(req));
+        return Task.FromResult(swashBuckleClient.CreateSwaggerJsonDocumentResponse(req));
     }
 
     [SwaggerIgnore]
