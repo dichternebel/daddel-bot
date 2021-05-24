@@ -4,7 +4,7 @@ module.exports =
 {
 	name: "game",
     aliasses: ["gametype", "mode", "type", "game_type", "game_mode"],
-    description: "change game type, e.g. `game wingman`",
+    description: "change game type (and optional map), e.g. `game casual` or `game wingman lake`",
 	execute: async (config, discordConfig, service, command, args) =>
 	{
         try {
