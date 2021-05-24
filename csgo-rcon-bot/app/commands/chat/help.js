@@ -5,7 +5,7 @@ module.exports =
 	execute: (config, discordConfig, service, command, args) =>
 	{
         try {
-            const list = "• **" + args.sort().map(x => x.join("** - ")).join("\n• **");
+            const list = "• **" + config.get('PREFIX') + " " + args.sort().map(x => x.join("** - ")).join("\n• **" + config.get('PREFIX') + " ");
 
             const embedDescription = "I can speak RCON to your CS:GO server. I am able to execute following commands on your behalf:\n\n"
                 + list
