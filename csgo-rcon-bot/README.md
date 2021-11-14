@@ -13,7 +13,7 @@ Since this is plain and pure JavaScript (CommonJS) it could be run on anything e
 
 In order to build and run the bot you need to download and install following in advance
 
-* [Node.js](https://nodejs.dev/) >= v12.x (developed with v15.7.0)
+* [Node.js](https://nodejs.dev/) >= v16.6 (developed with v16.13.0)
 * `git clone` the whole repo or [download zip](https://github.com/dichternebel/daddel-bot/archive/main.zip) package (backend included)
 * In order to clone the bot only you can use these commands:
 ```shell

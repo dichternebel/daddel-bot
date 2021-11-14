@@ -1,6 +1,6 @@
 const Conf = require("conf");
 const AppConfig = require("./config/app-config");
-const Discord = require("discord.js");
+const {Client, Intents} = require("discord.js");
 const DiscordContext = require("./app/discord-context");
 
 // Get app config
@@ -20,6 +20,6 @@ config.set('API_KEY', process.env.API_KEY);
 config.set('API_URL', process.env.API_URL);
 
 // Start that thing and inject client and config
-const client = new Discord.Client({ disableMentions: 'everyone' });
+const client = new Client({ disableMentions: 'everyone', intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 new DiscordContext(client, config);
 console.log('All engines running...');
