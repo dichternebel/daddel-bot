@@ -17,7 +17,7 @@ module.exports = function (client,config,message,newMessage) {
 
     const isDirectMessage = message.channel instanceof Discord.DMChannel;
     if (isDirectMessage) {
-        const service = new DiscordService(message);
+        const service = new DiscordService(message, false);
         service.sendMessageToChannel("Sorry, " + message.author.username +"...\nI'm not allowed to execute commands via DM. :disappointed_relieved:");
         return;
     }
@@ -27,13 +27,13 @@ module.exports = function (client,config,message,newMessage) {
     const command = args.shift().toLowerCase();
 
     // delete the caller message to prevent spam in channels (not working in DM!)
-    message.delete({ timeout : 60000}).catch(err => console.log(err));
+    setTimeout(() => message.delete().catch(err => console.log(err)), 60000);
     
     message.guild.members
     .fetch(message.author)
     .then(member => {
         // get info from sender
-        const isAdmin = member.hasPermission("ADMINISTRATOR");
+        const isAdmin = member.permissions.has("ADMINISTRATOR");
         const service = new DiscordService(message, isAdmin);
 
         // Get discord config

@@ -1,2 +1,2 @@
-const messageFile = require('./message');
+const messageFile = require('./messageCreate');
 module.exports = messageFile;

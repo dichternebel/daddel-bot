@@ -13,7 +13,7 @@ module.exports =
             }
             // guard for useless API calls
             if (!payload.accessToken || !payload.salt) {
-                service.message.react("👎").catch(err => console.log(err));
+                service.message.react('👎').catch(err => console.log(err));
                 return;
             }
             const endpoint = {
@@ -23,7 +23,7 @@ module.exports =
             const response = await apiService.get(endpoint, payload);
             const embed = service.getMapsEmbed(response.text);
 
-            service.sendMessageToChannel(embed, 120000);
+            service.sendMessageEmbedToChannel(embed, 120000);
         } catch (err) {
             service.reactWithError(err);
         }

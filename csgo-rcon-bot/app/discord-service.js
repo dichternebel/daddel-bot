@@ -41,10 +41,10 @@ class DiscordService {
             .addFields(
                 { name: 'Current Map', value: state.map, inline: true },
                 { name: 'Players', value: `${state.numplayers}(${state.numbots}) / ${state.maxplayers}`, inline: true },
-                { name: 'Ping', value: state.ping, inline: true },
+                { name: 'Ping', value: state.ping.toString(), inline: true },
                 { name: 'Access', value: (state.password)? ':lock:' : ':unlock:', inline: true},
                 { name: 'Server Version', value: state.version, inline: true},
-                { name: 'Tags', value: state.tags, inline: true},
+                { name: 'Tags', value: state.tags.toString(), inline: true},
             )
             .setTimestamp()
             .setFooter('EOM');
@@ -113,22 +113,31 @@ class DiscordService {
 
     // react when something wents wrong
     reactWithError(error) {
-        this.message.react("🛑");
+        this.message.react('🛑').catch(err => console.log(err));
         this.sendMessageToChannel("⚠️**rrgghhh!**\nSomething went terribly wrong...\n`" + escape(error.message) + "`");
     }
 
     // send a self-destructing response to injected context
     sendMessageToContext(messageContext, description, ttl) {
         if (ttl === undefined) ttl = 60000; // 1min.
-        
+
         messageContext.send(description)
-            .then(message => message.delete({ timeout: ttl }))
+            .then(message =>  setTimeout(() => message.delete(), ttl))
             .catch(err => console.log(err));
     }
 
     // sends a self-destructing response to current channel
     sendMessageToChannel(description, ttl) {
         this.sendMessageToContext(this.message.channel, description, ttl);
+    }
+
+    // sends a self-destructing rich response to current channel
+    sendMessageEmbedToChannel(description, ttl) {
+        if (ttl === undefined) ttl = 60000; // 1min.
+        
+        this.message.channel.send({ embeds: [description] })
+            .then(message =>  setTimeout(() => message.delete(), ttl))
+            .catch(err => console.log(err));
     }
 
     // collecting configuration entries
@@ -154,6 +163,8 @@ class DiscordService {
         let messageContext;
         let initialMessage;
 
+        const msg_filter = (m) => m.author.id === this.message.author.id;
+
         this.message.author.send(
             "**Moin Admin!**\nLet's have some configuration fun together! :sweat_smile:\nHINT: You can call this dialog using `" + config.get('PREFIX') + " config` anytime again.\n\nDo you want to enable the bot for this channel? [Y/N]"
         )
@@ -162,18 +173,13 @@ class DiscordService {
             messageContext = initialMessage.channel;
         })
         .then(() => {
-            let filter = (msg) => !msg.author.bot;
-            let options = {
-                max: 1,
-                time: ttl
-            };
-            return messageContext.awaitMessages(filter, options);
+            return messageContext.awaitMessages({ filter: msg_filter, max: 1, time: ttl });
         })
         .then((collected) => {
-            if (!(collected.array().length)) {
+            if (collected.size === 0) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() != 'n') {
+            if (collected.first().content.toLowerCase() != 'n') {
                 discordConfiguration.isEnabled = true;
             }
             else {
@@ -188,19 +194,14 @@ class DiscordService {
             );
         })
         .then(() => {
-            let filter = (msg) => !msg.author.bot;
-            let options = {
-              max: 1,
-              time: ttl
-            };
-            return messageContext.awaitMessages(filter, options);
+            return messageContext.awaitMessages({ filter: msg_filter, max: 1, time: ttl });
         })
         .then((collected) => {
-            if (!(collected.array().length)) {
+            if (collected.size === 0) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() != 's') {
-                discordConfiguration.server = collected.array()[0].content.trim();
+            if (collected.first().content.toLowerCase() != 's') {
+                discordConfiguration.server = collected.first().content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
@@ -209,19 +210,14 @@ class DiscordService {
             );
         })
         .then(() => {
-            let filter = (msg) => !msg.author.bot;
-            let options = {
-              max: 1,
-              time: ttl
-            };
-            return messageContext.awaitMessages(filter, options);
+            return messageContext.awaitMessages({ filter: msg_filter, max: 1, time: ttl });
         })
         .then((collected) => {
-            if (!(collected.array().length)) {
+            if (collected.size === 0) {
                 throw ('Timed out.');
             }
 
-            let content = collected.array()[0].content.trim().toLowerCase();
+            let content = collected.first().content.trim().toLowerCase();
             // entered a number?
             if (content === 's' || !isNaN(content)) {
                 if (content != 's') discordConfiguration.port = content;
@@ -236,19 +232,14 @@ class DiscordService {
             }
         })
         .then(() => {
-            let filter = (msg) => !msg.author.bot;
-            let options = {
-              max: 1,
-              time: ttl
-            };
-            return messageContext.awaitMessages(filter, options);
+            return messageContext.awaitMessages({ filter: msg_filter, max: 1, time: ttl });
         })
         .then((collected) => {
-            if (!(collected.array().length)) {
+            if (collected.size === 0) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() != 's') {
-                discordConfiguration.password = collected.array()[0].content.trim();
+            if (collected.first().content.toLowerCase() != 's') {
+                discordConfiguration.password = collected.first().content.trim();
             }
             this.sendMessageToContext(
                 messageContext,
@@ -257,22 +248,17 @@ class DiscordService {
             );
         })
         .then(() => {
-            let filter = (msg) => !msg.author.bot;
-            let options = {
-              max: 1,
-              time: ttl
-            };
-            return messageContext.awaitMessages(filter, options);
+            return messageContext.awaitMessages({ filter: msg_filter, max: 1, time: ttl });
         })
         .then((collected) => {
-            if (!(collected.array().length)) {
+            if (collected.size === 0) {
                 throw ('Timed out.');
             }
-            if (collected.array()[0].content.toLowerCase() === 'n') {
+            if (collected.first().content.toLowerCase() === 'n') {
                 discordConfiguration.role = null;
             }
             else {
-                discordConfiguration.role = collected.array()[0].content;
+                discordConfiguration.role = collected.first().content;
             }
             apiService.postJson(endpoint, discordConfiguration)
             .then(() => {
@@ -291,7 +277,7 @@ class DiscordService {
             this.sendMessageToContext(messageContext, err, ttl);
         })
         .finally(() => {
-            initialMessage.delete({ timeout: 30000 }).catch(err => console.log(err));
+            setTimeout(() => initialMessage.delete().catch(err => console.log(err)), 30000);
         });
     }
 }

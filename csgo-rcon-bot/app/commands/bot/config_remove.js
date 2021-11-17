@@ -8,7 +8,7 @@ module.exports =
 	execute: async (config, discordConfig, service, command, args) =>
 	{
         if (!service.isAdmin) {
-            service.sendMessageToChannel("Sorry, " + message.author.username +".\n `" + config.get('PREFIX') + " " + command +"` is only allowed for those cool admins. :sunglasses:");
+            service.sendMessageToChannel("Sorry, " + service.message.author.username +".\n `" + config.get('PREFIX') + " " + command +"` is only allowed for those cool admins. :sunglasses:");
             return;
         }
         try {
@@ -45,7 +45,7 @@ module.exports =
                 embed = service.getRichEmbed(messageTitle, "Config successfully removed from current channel.");
             }
 
-            service.sendMessageToChannel(embed);
+            service.sendMessageEmbedToChannel(embed);
         } catch (err) {
             service.reactWithError(err);
         }

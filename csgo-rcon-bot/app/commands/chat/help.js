@@ -11,7 +11,7 @@ module.exports =
                 + list
                 + "\n\nPlease run `" + config.get('PREFIX') + " status` and check for players before changing things. **Please be sure not to ruin a running match!\n\nGot it?** :face_with_monocle:";
             const embed = service.getRichEmbed("Me is helping out :woozy_face:!", embedDescription);
-            service.sendMessageToChannel(embed, 120000);
+            service.sendMessageEmbedToChannel(embed, 120000);
         } catch (err) {
             service.reactWithError(err);
         }

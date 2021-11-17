@@ -20,7 +20,7 @@ module.exports =
             }
             // guard for useless API calls
             if (!payload.accessToken || !payload.salt) {
-                service.message.react("👎").catch(err => console.log(err));
+                await service.message.react('👎').catch(err => console.log(err));
                 return;
             }
             const endpoint = {
@@ -31,7 +31,7 @@ module.exports =
             const messageTitle = "CS:GO Server Map Change Message";
             const embed = service.getRichEmbed(messageTitle, "Trying to change map to " + param +"...\n" + response.text);
 
-            service.sendMessageToChannel(embed);
+            service.sendMessageEmbedToChannel(embed);
         } catch (err) {
             service.reactWithError(err);
         }

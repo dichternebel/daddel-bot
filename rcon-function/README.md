@@ -4,7 +4,7 @@ This Azure Function API can execute RCON commands on CS:GO/SRCDS servers using [
 ## Getting started
 
 This is a serverless API that runs on Azure Functions.  
-It's written entirely in C# using .Net Core 3.1 and uses a Cosmos DB for storing configuration doscuments. Credentials are stored using the TripleDESCryptoServiceProvider with a combination of a strong master key and a Discord snowflake coming from the current discord user.
+It's written entirely in C# using .Net Core 3.1 and uses a Cosmos DB for storing configuration documents. Credentials are stored using the TripleDESCryptoServiceProvider with a combination of a strong master key and a Discord snowflake coming from the current discord user.
 
 These are the targets I am running the backend on:  
 * Azure Cosmos DB instance for [free](https://azure.microsoft.com/en-us/services/cosmos-db/)

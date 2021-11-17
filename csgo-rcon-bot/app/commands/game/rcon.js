@@ -22,7 +22,7 @@ module.exports =
             }
             // guard for useless API calls
             if (!payload.accessToken || !payload.salt) {
-                service.message.react("👎").catch(err => console.log(err));
+                service.message.react('👎').catch(err => console.log(err));
                 return;
             }
             const endpoint = {
@@ -33,7 +33,7 @@ module.exports =
             const messageTitle = "CS:GO Server RCON";
             const embed = service.getRichEmbed(messageTitle, response.text);
 
-            service.sendMessageToChannel(embed);
+            service.sendMessageEmbedToChannel(embed);
         } catch (err) {
             service.reactWithError(err);
         }

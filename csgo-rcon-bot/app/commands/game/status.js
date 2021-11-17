@@ -17,7 +17,7 @@ module.exports =
             // server offline?
             if (response.offline) {
                 const embed = service.getStatusEmbed(response);
-                service.sendMessageToChannel(embed);
+                service.sendMessageEmbedToChannel(embed);
                 return;
             }
             // else try to get an image for current map
@@ -41,7 +41,7 @@ module.exports =
             }
             // create and send status embed
             const embed = service.getStatusEmbed(response);
-            service.sendMessageToChannel(embed);
+            service.sendMessageEmbedToChannel(embed);
 
         } catch (err) {
             service.reactWithError(err);

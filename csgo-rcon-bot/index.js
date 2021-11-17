@@ -20,6 +20,6 @@ config.set('API_KEY', process.env.API_KEY);
 config.set('API_URL', process.env.API_URL);
 
 // Start that thing and inject client and config
-const client = new Client({ disableMentions: 'everyone', intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const client = new Client({ disableMentions: 'everyone', intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES] });
 new DiscordContext(client, config);
 console.log('All engines running...');

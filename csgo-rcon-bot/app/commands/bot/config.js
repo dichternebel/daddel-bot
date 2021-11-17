@@ -6,7 +6,7 @@ module.exports =
 	execute: (config, discordConfig, service, command, args) =>
 	{
         if (!service.isAdmin) {
-            service.sendMessageToChannel("Sorry, " + message.author.username +".\n `" + config.get('PREFIX') + " " + command +"` is only allowed for those cool admins. :sunglasses:");
+            service.sendMessageToChannel("Sorry, " + service.message.author.username +".\n `" + config.get('PREFIX') + " " + command +"` is only allowed for those cool admins. :sunglasses:");
             return;
         }
         try {

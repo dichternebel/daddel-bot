@@ -5,9 +5,11 @@ This Discord bot helps users to send RCON commands to their CS:GO/SRCDS server. 
 
 ## Discord Server Owners and Users
 
-In order to use this bot the first thing to do is to invite it to your Discord server by following this [link](https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=27712&scope=bot):
+**BREAKING NEWS 2021-11: If you already have this bot running on your discord server, please repeat the invitation asap! Due to Discord API and permission changes the bot with the old permission settings is not able to post reactions... ¯\_(ツ)_/¯**
 
-[![](assets/bot_card.png)](https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=27712&scope=bot)
+In order to use this bot the first thing to do is to invite it to your Discord server by following this [link](https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=93248&scope=bot):
+
+[![](assets/bot_card.png)](https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=93248&scope=bot)
 
 Please leave the permissions as is. They are needed in order to make the bot work as expected.
 After adding the bot to your server you should see it as a new user like this:  

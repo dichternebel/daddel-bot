@@ -19,7 +19,7 @@ module.exports =
             }
             // guard for useless API calls
             if (!payload.accessToken || !payload.salt) {
-                service.message.react("👎").catch(err => console.log(err));
+                await service.message.react('👎').catch(err => console.log(err));
                 return;
             }
             const endpoint = {
@@ -34,7 +34,7 @@ module.exports =
             }
             const embed = service.getRichEmbed(messageTitle, descr);
 
-            service.sendMessageToChannel(embed);
+            service.sendMessageEmbedToChannel(embed);
         } catch (err) {
             service.reactWithError(err);
         }

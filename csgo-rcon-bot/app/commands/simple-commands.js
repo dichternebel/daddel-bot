@@ -9,6 +9,7 @@ module.exports =
             if (args.length > 0) {
                 param = args[0];
             }
+            
             // prepare the payload for API call
             const payload = {
                 accessToken: discordConfig.accessToken,
@@ -17,7 +18,7 @@ module.exports =
             }
             // guard for useless API calls
             if (!payload.accessToken || !payload.salt) {
-                service.message.react("👎").catch(err => console.log(err));
+                service.message.react('👎').catch(err => console.log(err));
                 return;
             }
             const endpoint = {
@@ -26,10 +27,10 @@ module.exports =
             };
             const response = await apiService.get(endpoint, payload);
             if (service.isValid(response.text)) {
-                service.message.react("👍").catch(err => console.log(err));
+                service.message.react('👍').catch(err => console.log(err));
             }
             else {
-                service.message.react("🛑").catch(err => console.log(err));
+                service.message.react('🛑').catch(err => console.log(err));
             }
         } catch (err) {
             service.reactWithError(err);
