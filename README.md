@@ -5,7 +5,9 @@ This Discord bot helps users to send RCON commands to their CS:GO/SRCDS server. 
 
 ## Discord Server Owners and Users
 
-**BREAKING NEWS 2021-11: If you already have this bot running on your discord server, please repeat the invitation asap! Due to Discord API and permission changes the bot with the old permission settings is not able to post reactions... ¯\_(ツ)_/¯**
+**BREAKING CHANGES 2021-11:**
+
+**If you already have this bot running on your discord server, please repeat the invitation asap! Due to Discord API and permission changes the bot with the old permission settings is not able to post reactions... ¯\\_(ツ)_/¯**
 
 In order to use this bot the first thing to do is to invite it to your Discord server by following this [link](https://discord.com/oauth2/authorize?client_id=797866820996169779&permissions=93248&scope=bot):
 
@@ -28,7 +30,7 @@ If you do not want to provide your password due to reasons, the bot is still abl
 
 1. Go to the channel where the bot should serve your requests and send `!cs`
 2. The initial configuration dialog should begin as a DM from the bot.
-3. Answer all 4 questions.
+3. Answer all 4 questions. Be sure not use a private IP address! Server must be public and port must be opened in firewall.
 4. The bot gives feedback when your settings are done.
 5. *Optional:* remove all your answers from the DM dialog to keep them private.
 
