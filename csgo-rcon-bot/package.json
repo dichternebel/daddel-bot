@@ -22,7 +22,7 @@
     "ajv": "^8.8.2",
     "conf": "^10.1.1",
     "discord.js": "^13.3.1",
-    "dotenv": "^10.0.0",
+    "dotenv": "^11.0.0",
     "escape-markdown": "^1.0.4",
     "fs": "0.0.1-security",
     "gamedig": "^3.0.8",
