@@ -28,7 +28,7 @@
     "gamedig": "^3.0.8",
     "node-fetch": "^2.6.6",
     "node-schedule": "^2.1.0",
-    "normalize-url": "^7.0.2",
+    "normalize-url": "^8.0.1",
     "split-lines": "^2.1.0",
     "superagent": "^6.1.0"
   }
