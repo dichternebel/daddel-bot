@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "ajv": "^8.8.2",
-    "conf": "^10.1.1",
+    "conf": "^13.1.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
     "escape-markdown": "^1.0.4",
