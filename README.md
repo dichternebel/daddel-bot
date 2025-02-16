@@ -1,3 +1,8 @@
+> [!NOTE]  
+> This repo is inactive and archived now.
+> All bot related services are stopped and removed.
+
+
 # Moin! I bims, daddelbot! [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dichternebel/csgo-rcon-bot/blob/main/LICENSE.md)
 This Discord bot helps users to send RCON commands to their CS:GO/SRCDS server. The bot gets configured per text channel, so you can use it for multiple CS:GO servers on a single Discord server.
 
